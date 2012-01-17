@@ -49,7 +49,7 @@ namespace SpriteStrife
     [Serializable]
     class Map
     {
-
+        public int xOffset, yOffset;
         public int tileSizeX, tileSizeY;
         public int tileSetSize;
         //public FloorTypes[,] floor;
@@ -108,6 +108,16 @@ namespace SpriteStrife
 
             //build ray table for LoS
             rayList = BuildRayList(5);
+        }
+
+        /// <summary>
+        /// Converts screen coordinates to map coordinates.
+        /// </summary>
+        public Point XYtoMap(int inX, int inY)
+        {
+            int mx = (inX - xOffset) / tileSizeX;
+            int my = (inY - yOffset) / tileSizeY;
+            return new Point(mx, my);
         }
 
         /// <summary>
@@ -685,18 +695,12 @@ namespace SpriteStrife
             newMap.Recalc();
 
             //throw in some items
-            
-
-
             for (int i = 0; i < 10; i++)
             {
                 Point itemloc = newMap.openSquares[rand.Next(newMap.openSquares.Count)];
-                newMap.items.Add(new Item(String.Format("I{0}", newMap.items.Count), x: itemloc.X, y: itemloc.Y));
+                //newMap.items.Add(new Item(String.Format("I{0}", newMap.items.Count), 0, itemloc.X, itemloc.Y));
             }
-            DBLoader.SaveDB("database.db", newMap.items);
 
-            Console.WriteLine(DBLoader.LoadDB("database.db", ref newMap.items));
-            
             newMap.startingLocation = newMap.openSquares[rand.Next(newMap.openSquares.Count)];
 
             return newMap;

@@ -13,7 +13,7 @@
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
     <XnaPlatform>Windows</XnaPlatform>
-    <XnaProfile>Reach</XnaProfile>
+    <XnaProfile>HiDef</XnaProfile>
     <XnaCrossPlatformGroupID>bcfea35a-0e64-4562-82a7-ee7b193b18ae</XnaCrossPlatformGroupID>
     <XnaOutputType>Game</XnaOutputType>
     <ApplicationIcon>Game.ico</ApplicationIcon>
@@ -113,7 +113,6 @@
     <Compile Include="DBLoader.cs" />
     <Compile Include="GUI.cs" />
     <Compile Include="Item.cs" />
-    <Compile Include="OldItem.cs" />
     <Compile Include="MapGen.cs" />
     <Compile Include="Hero.cs" />
     <Compile Include="Mob.cs" />

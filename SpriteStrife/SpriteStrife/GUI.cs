@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -127,6 +130,20 @@ namespace SpriteStrife
             }
         }
 
+        [Serializable]
+        public class DeathCertificate
+        {
+            public int level, score;
+            public string name;
+
+            public DeathCertificate(int Level, int Score, string Name)
+            {
+                level = Level;
+                score = Score;
+                name = Name;
+            }
+        }
+
         public GraphicsDevice gD;
         public int scrSizeX, scrSizeY;
         public List<Box> boxes;
@@ -141,6 +158,10 @@ namespace SpriteStrife
         public int selAct;
         public Texture2D statBar;
         public List<MenuItem> mainMenu;
+        public List<MenuItem> gyMenu;
+        public List<DeathCertificate> graves;
+        public Texture2D graveTex;
+        public List<Texture2D> overlays;
 
         public GUI(GraphicsDevice gd, ContentManager cm, Color bgc, Color bdc)
         {
@@ -158,6 +179,10 @@ namespace SpriteStrife
             mmtile = cm.Load<Texture2D>("mm_tile");
             mmmark = cm.Load<Texture2D>("mm_mark");
             mmblock = cm.Load<Texture2D>("mm_block");
+
+            overlays = new List<Texture2D>();
+            overlays.Add(cm.Load<Texture2D>("gui_overlay_foot"));
+            overlays.Add(cm.Load<Texture2D>("gui_overlay_loc"));
 
             itemcircle = cm.Load<Texture2D>("gui_itemcircle");
             actIcons = new List<Texture2D>();
@@ -187,15 +212,45 @@ namespace SpriteStrife
             mainMenu.Add(new MenuItem("Continue", gD.Viewport.Width / 2, 200, menuFont));
             mainMenu.Add(new MenuItem("Tutorial", gD.Viewport.Width / 2, 250, menuFont));
             mainMenu.Add(new MenuItem("Options", gD.Viewport.Width / 2, 300, menuFont));
-            mainMenu.Add(new MenuItem("Exit", gD.Viewport.Width / 2, 350, menuFont));
+            mainMenu.Add(new MenuItem("Graveyard", gD.Viewport.Width / 2, 350, menuFont));
+            mainMenu.Add(new MenuItem("Exit", gD.Viewport.Width / 2, 400, menuFont));
             mainMenu[2].enabled = false;
             mainMenu[3].enabled = false;
+
+            graveTex = cm.Load<Texture2D>("gravestones");
+            gyMenu = new List<MenuItem>();
+            gyMenu.Add(new MenuItem("< Back", 150, 80, menuFont));
+
+            //graves = new List<DeathCertificate>();
+            //Random grand = new Random();
+            //for (int i = 0; i < 15; i++)
+            //{
+            //    graves.Add(new DeathCertificate(grand.Next(1, 20), 10, string.Format("No-Name Number {0}", i)));
+            //}
+            //SaveGraves();
+
+            graves = LoadGraves();
         }
 
-        public void DrawAll(GameState gameState, SpriteBatch screen, Hero hero, Map dmap)
+        public void DrawAll(GameState gameState, SpriteBatch screen, Hero hero, Map dMap)
         {
-            if (gameState == GameState.running)
+            if (gameState == GameState.Running)
             {
+                //map overlays
+                if (hero.mQueue.Count > 0)
+                {
+                    Color olcol = new Color(70, 210, 100, 50);
+                    screen.Draw(overlays[1], new Rectangle(hero.mQueue[hero.mQueue.Count - 1].X * dMap.tileSizeX + dMap.xOffset, hero.mQueue[hero.mQueue.Count - 1].Y * dMap.tileSizeY + dMap.yOffset, dMap.tileSizeX, dMap.tileSizeY), olcol);
+                    if (hero.mQueue.Count > 1)
+                    {
+                        for (int i = 0; i < hero.mQueue.Count - 1; i++)
+                        {
+                            screen.Draw(overlays[0], new Rectangle(hero.mQueue[i].X * dMap.tileSizeX + dMap.xOffset, hero.mQueue[i].Y * dMap.tileSizeY + dMap.yOffset, dMap.tileSizeX, dMap.tileSizeY), olcol);
+                        }
+                    }
+                }
+
+                //box backgrounds
                 foreach (Box thisbox in boxes)
                 {
                     thisbox.Draw(screen);
@@ -235,16 +290,16 @@ namespace SpriteStrife
                 Rectangle prect;
                 int dx = lX;
                 int dy = lY;
-                while (tX < dmap.bounds.X && dx < uX)
+                while (tX < dMap.bounds.X && dx < uX)
                 {
-                    while (tY < dmap.bounds.Y && dy < uY)
+                    while (tY < dMap.bounds.Y && dy < uY)
                     {
-                        if (dmap.vision[tX, tY] > 0)
+                        if (dMap.vision[tX, tY] > 0)
                         {
                             prect = new Rectangle(dx, dy, 4, 4);
-                            if (dmap.floor[tX, tY] == FloorTypes.Wall) screen.Draw(mmtile, prect, Color.DarkSlateGray);
-                            else if (dmap.floor[tX, tY] == FloorTypes.Floor) screen.Draw(mmtile, prect, Color.LightGray);
-                            else if (dmap.floor[tX, tY] == FloorTypes.Feature) screen.Draw(mmblock, prect, Color.Gray);
+                            if (dMap.floor[tX, tY] == FloorTypes.Wall) screen.Draw(mmtile, prect, Color.DarkSlateGray);
+                            else if (dMap.floor[tX, tY] == FloorTypes.Floor) screen.Draw(mmtile, prect, Color.LightGray);
+                            else if (dMap.floor[tX, tY] == FloorTypes.Feature) screen.Draw(mmblock, prect, Color.Gray);
                         }
                         dy += 4;
                         tY += 1;
@@ -256,22 +311,22 @@ namespace SpriteStrife
                     dx += 4;
                 }
 
-                foreach (Item wonder in dmap.items)
+                foreach (Item wonder in dMap.items)
                 {
                     int mx = boxes[1].contRect.Center.X - (4 * (hero.mapX - wonder.MapX));
                     int my = boxes[1].contRect.Center.Y - (4 * (hero.mapY - wonder.MapY));
-                    if (dmap.vision[wonder.MapX, wonder.MapY] == Vision.Visible && boxes[1].contRect.Contains(new Point(mx, my)))
+                    if (dMap.vision[wonder.MapX, wonder.MapY] == Vision.Visible && boxes[1].contRect.Contains(new Point(mx, my)))
                     {
                         prect = new Rectangle(mx, my, 4, 4);
                         screen.Draw(mmmark, prect, Color.Gold);
                     }
                 }
 
-                foreach (Monster fiend in dmap.monsters)
+                foreach (Monster fiend in dMap.monsters)
                 {
                     int mx = boxes[1].contRect.Center.X - (4 * (hero.mapX - fiend.mapX));
                     int my = boxes[1].contRect.Center.Y - (4 * (hero.mapY - fiend.mapY));
-                    if (dmap.vision[fiend.mapX, fiend.mapY] == Vision.Visible && boxes[1].contRect.Contains(new Point(mx, my)))
+                    if (dMap.vision[fiend.mapX, fiend.mapY] == Vision.Visible && boxes[1].contRect.Contains(new Point(mx, my)))
                     {
                         prect = new Rectangle(mx, my, 4, 4);
                         screen.Draw(mmmark, prect, Color.Red);
@@ -298,9 +353,35 @@ namespace SpriteStrife
                     screen.Draw(actIcons[i], new Rectangle(boxes[3].contRect.Left + 5 + (50 * i), boxes[3].contRect.Top + 5, 40, 40), Color.White);
                 }
             }
-            else if (gameState == GameState.mainMenu)
+            else if (gameState == GameState.MainMenu)
             {
                 foreach (MenuItem mitem in mainMenu)
+                {
+                    if (mitem.enabled && mitem.highlight)
+                    {
+                        screen.DrawString(menuFont, mitem.labelText, mitem.labelLoc, hlCol);
+                    }
+                    else if (mitem.enabled)
+                    {
+                        screen.DrawString(menuFont, mitem.labelText, mitem.labelLoc, Color.White);
+                    }
+                    else
+                    {
+                        screen.DrawString(menuFont, mitem.labelText, mitem.labelLoc, Color.Gray);
+                    }
+                }
+            }
+            else if (gameState == GameState.Graveyard)
+            {
+                for (int i = graves.Count - 1; i >= 0; i--)
+                {
+                    int row = (int)Math.Floor((double)i / 4);
+                    int col = i % 4;
+                    Color drawcol = new Color(220 - (40 * row), 220 - (40 * row), 220 - (40 * row));
+                    screen.Draw(graveTex, new Rectangle(20 + (200 - (30 * row)) * col + (60 * row), (1500 / (10 + row ^ 2)), 180 - 50 * row, 360 - 100 * row), new Rectangle(10 * (graves[i].level / 4), 0, 10, 20), drawcol);
+                }
+
+                foreach (MenuItem mitem in gyMenu)
                 {
                     if (mitem.enabled && mitem.highlight)
                     {
@@ -343,15 +424,28 @@ namespace SpriteStrife
 
         public void UpdateAll(SpriteBatch screen, bool forceUpdate = false)
         {
+            //redraw boxes
             foreach (Box thisbox in boxes)
             {
                 if (forceUpdate) thisbox.needUpdate = true;
                 thisbox.Update(screen);
             }
 
+            //center menu items
+            if (forceUpdate)
+            {
+                foreach (MenuItem mitem in mainMenu)
+                {
+                    mitem.labelLoc = new Vector2((int)((gD.Viewport.Width / 2) - (menuFont.MeasureString(mitem.labelText).X / 2)), (int)(mitem.labelLoc.Y));
+                    mitem.rect = new Rectangle((int)mitem.labelLoc.X, (int)mitem.labelLoc.Y, (int)menuFont.MeasureString(mitem.labelText).X, (int)menuFont.MeasureString(mitem.labelText).Y);
+                }
+            }
+
+            //multipurpose oscillator
             osc += 0.05;
             if (osc > Math.PI) osc -= Math.PI;
 
+            //update highlight color
             hlCol = new Color(0.2f, (float)Math.Sin(osc), 1f-(float)Math.Sin(osc));
         }
 
@@ -368,9 +462,9 @@ namespace SpriteStrife
             return caught;
         }
 
-        public GameState ProcessInput(GameLogic gamelogic, GameState gameState, KeyboardState oKS, KeyboardState nKS, MouseState oMS, MouseState nMS, Hero hero, Map dMap, Point mapMLoc)
+        public GameState ProcessInput(GameLogic gamelogic, GameState gameState, KeyboardState oKS, KeyboardState nKS, MouseState oMS, MouseState nMS, Hero hero, Map dMap)
         {
-            if (gameState == GameState.running)
+            if (gameState == GameState.Running)
             {
                 //adjust log
                 if (nKS.IsKeyDown(Keys.OemMinus) && oKS.IsKeyUp(Keys.OemMinus)) LogScrollUp();
@@ -390,6 +484,7 @@ namespace SpriteStrife
 
                 //Mouse Input
                 Point mPoint = new Point(nMS.X, nMS.Y);
+                Point mapMLoc = dMap.XYtoMap(nMS.X, nMS.Y);
                 if (gD.Viewport.Bounds.Contains(mPoint))
                 {
                     if (oMS.LeftButton != ButtonState.Pressed && nMS.LeftButton == ButtonState.Pressed)
@@ -435,7 +530,7 @@ namespace SpriteStrife
                     }
                 }
             }
-            else if (gameState == GameState.mainMenu)
+            else if (gameState == GameState.MainMenu)
             {
                 foreach (MenuItem mitem in mainMenu)
                 {
@@ -450,14 +545,18 @@ namespace SpriteStrife
                             if (mainMenu.IndexOf(mitem) == 0)
                             {
                                 gamelogic.NewGame("testchar", 0);
-                                return GameState.running;
+                                return GameState.Running;
                             }
                             else if (mainMenu.IndexOf(mitem) == 1)
                             {
                                 gamelogic.ContinueGame("testchar");
-                                return GameState.running;
+                                return GameState.Running;
                             }
                             else if (mainMenu.IndexOf(mitem) == 4)
+                            {
+                                return GameState.Graveyard;
+                            }
+                            else if (mainMenu.IndexOf(mitem) == 5)
                             {
                                 gamelogic.Exit();
                             }
@@ -470,8 +569,51 @@ namespace SpriteStrife
                     
                 }
             }
+            else if (gameState == GameState.Graveyard)
+            {
+                foreach (MenuItem mitem in gyMenu)
+                {
+                    mitem.highlight = false;
+                }
+                foreach (MenuItem mitem in gyMenu)
+                {
+                    if (mitem.rect.Contains(new Point(nMS.X, nMS.Y)))
+                    {
+                        if (nMS.LeftButton == ButtonState.Pressed && oMS.LeftButton == ButtonState.Released)
+                        {
+                            if (gyMenu.IndexOf(mitem) == 0)
+                            {
+                                return GameState.MainMenu;
+                            }
+                        }
+                        else if (mitem.highlight == false && mitem.enabled)
+                        {
+                            mitem.highlight = true;
+                        }
+                    }
+                }
+            }
 
             return gameState;
+        }
+
+        public void SaveGraves()
+        {
+            BinaryFormatter bf = new BinaryFormatter();
+            FileStream outstream = File.OpenWrite("graves.bin");
+            bf.Serialize(outstream, graves);
+            outstream.Close();
+        }
+
+        public List<DeathCertificate> LoadGraves()
+        {
+            List<DeathCertificate> tgraves;
+            BinaryFormatter bf = new BinaryFormatter();
+            FileStream reader = File.OpenRead("graves.bin");
+            tgraves = (List<DeathCertificate>)bf.Deserialize(reader);
+            reader.Close();
+
+            return tgraves;
         }
 
     }

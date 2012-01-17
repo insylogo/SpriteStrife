@@ -5,12 +5,13 @@ using System.Text;
 
 namespace SpriteStrife
 {
-    [Serializable]
+
     enum StatType { 
         Strength = 0, Toughness, Health,
         Intellect, Perception, Sanity,
         Faith, Wisdom, Vitality
     }
+
     [Serializable]
     class Stat
     {
@@ -21,7 +22,7 @@ namespace SpriteStrife
             modifier = 0;
             basevalue = startingValue;
         }
-        
+
         private int modifier;
         private int basevalue;
         
@@ -55,4 +56,3 @@ namespace SpriteStrife
         }
     }
 }
-

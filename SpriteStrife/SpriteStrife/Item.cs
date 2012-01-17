@@ -15,28 +15,28 @@ namespace SpriteStrife
     [Serializable]
     enum ItemType
     {
-        None = 0, Hands, Feet, 
-        Chest, Head, OneHandedMelee, 
-        TwoHandedMelee, OneHandedRanged, 
-        TwoHandedRanged, Shield, Potion, 
+        None = 0, Hands, Feet,
+        Chest, Head, OneHandedMelee,
+        TwoHandedMelee, OneHandedRanged,
+        TwoHandedRanged, Shield, Potion,
         Food, Scroll, Gold
     }
 
     enum ItemQuality
     {
-        None = 0, Normal, Damaged, 
+        None = 0, Normal, Damaged,
         Superior, Magic, Legendary
     }
 
     enum AmmoType
     {
-        None = 0, Arrows, Bolts, 
+        None = 0, Arrows, Bolts,
         Thrown, Bullets, Magic
     }
 
     enum DamageType
     {
-        None = 0, Physical, Magical, 
+        None = 0, Physical, Magical,
         Spiritual, Fire, Cold, Lightning
     }
 
@@ -52,13 +52,10 @@ namespace SpriteStrife
 
         StatSystem attributes;
         ItemType type;
-        
+
         DamageType damage;
-        
+
         AmmoType ammo;
-
-
-        
 
         public double Value { get; set; }
 
@@ -67,15 +64,15 @@ namespace SpriteStrife
         public ItemQuality Quality { get; set; }
 
         public Item(
-            string itemName = "Default", 
-            ItemType itemType = ItemType.None, 
-            StatSystem itemStats = null, 
-            DamageType damageType = DamageType.None, 
-            AmmoType itemShoots = AmmoType.None, 
-            ItemQuality itemQuality = ItemQuality.None, 
-            double value = 0.0, 
-            int x = 0, 
-            int y = 0, 
+            string itemName = "Default",
+            ItemType itemType = ItemType.None,
+            StatSystem itemStats = null,
+            DamageType damageType = DamageType.None,
+            AmmoType itemShoots = AmmoType.None,
+            ItemQuality itemQuality = ItemQuality.None,
+            double value = 0.0,
+            int x = 0,
+            int y = 0,
             int quantity = 1)
         {
             if (itemStats != null)
@@ -96,8 +93,6 @@ namespace SpriteStrife
             MapX = x;
             MapY = y;
         }
-
-      
 
         public AmmoType Ammo
         {
@@ -123,7 +118,7 @@ namespace SpriteStrife
             }
         }
 
-       
+
         public ItemType Type
         {
             get

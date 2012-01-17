@@ -8,8 +8,6 @@ namespace SpriteStrife
     [Serializable]
     class StatSystem
     {
-
-
         Stat[] stats;
 
         public StatSystem()
@@ -18,11 +16,11 @@ namespace SpriteStrife
 
             for (int i = 0; i < 9; ++i)
             {
-                stats[i]  = new Stat((StatType) i, 0);
+                stats[i] = new Stat((StatType)i, 0);
             }
         }
 
-        public Stat[] Stats 
+        public Stat[] Stats
         {
             get
             {
@@ -30,7 +28,7 @@ namespace SpriteStrife
             }
         }
 
-        public StatSystem Add (StatSystem otherSystem)
+        public StatSystem Add(StatSystem otherSystem)
         {
             StatSystem newSystem = new StatSystem();
 

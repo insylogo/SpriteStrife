@@ -13,7 +13,7 @@ using System.IO;
 
 namespace SpriteStrife
 {
-    public enum GameState { running = 0, mainMenu, newGame, charSelectMenu, charMenu, levelUpMenu };
+    public enum GameState { Running = 0, MainMenu, CharSelectMenu, CharMenu, LevelUpMenu, Graveyard, Tutorial, OptionMenu };
 
     /// <summary>
     /// This is the main type for your game
@@ -31,7 +31,6 @@ namespace SpriteStrife
         Texture2D objectSetImg;
         KeyboardState oldKState;
         MouseState oldMState;
-        int xOffset, yOffset;
         HeroGen heroGen;
         Hero hero;
         TimeSpan lastTurnTime;
@@ -65,29 +64,22 @@ namespace SpriteStrife
         /// </summary>
         protected override void Initialize()
         {
-            StatSystem playerStats = new StatSystem();
-            for (int i = 0; i < 9; ++i) {
-                playerStats.SetBaseStat((StatType)i, i);
-            }
+            //StatSystem playerStats = new StatSystem();
+            //for (int i = 0; i < 9; ++i) {
+            //    playerStats.SetBaseStat((StatType)i, i);
+            //}
 
          
-            IEnumerable<Stat> statistics = from s in playerStats.Stats
-                                           where s.BaseValue >= 5
-                                           orderby s.Type
-                                           select s;
+            //IEnumerable<Stat> statistics = from s in playerStats.Stats
+            //                               where s.BaseValue >= 5
+            //                               orderby s.Type
+            //                               select s;
+            //foreach (var stat in statistics)
+            //{
+            //    Console.WriteLine("{0}: {1}", stat.Type, stat.Value);
+            //}
 
-
-            foreach (var stat in statistics)
-            {
-                Console.WriteLine("{0}: {1}", stat.Type, stat.Value);
-            }
-
-
-
-            
-
-
-            gameState = GameState.mainMenu;
+            gameState = GameState.MainMenu;
             debugmode = false;
 
             rando = new Random();
@@ -133,7 +125,6 @@ namespace SpriteStrife
             Texture2D fb = this.Content.Load<Texture2D>("gui_frameborders");
             gui = new GUI(GraphicsDevice, Content, new Color(20, 20, 100, 180), new Color(100, 100, 220, 180));
             
-
             //load tileset and generate map
             tileSetImg = this.Content.Load<Texture2D>("tileset_basic");
             objectSetImg = this.Content.Load<Texture2D>("objectset_basic");
@@ -159,9 +150,7 @@ namespace SpriteStrife
         public void NewGame(string hname, int hclass)
         {
             dMap = mapGen.GenerateMap();
-
-
-
+            
             gui.LogEntry("Welcome to Sprite Strife!", Color.LightGray);
 
             //create the hero
@@ -174,18 +163,22 @@ namespace SpriteStrife
             mapGen.SaveMap("testchar", dMap);
             heroGen.SaveHero(hero);
 
-            gameState = GameState.running;
+            gameState = GameState.Running;
         }
 
         public void ContinueGame(string hname)
         {
             dMap = mapGen.LoadMap("testchar", 0);
-
             hero = heroGen.LoadHero("testchar");
 
             FixMap();
 
-            gameState = GameState.running;
+            gameState = GameState.Running;
+        }
+
+        public void BuryGame(string hname)
+        {
+            //code to delete map files and add hero to graveyard on game end
         }
 
         /// <summary>
@@ -199,7 +192,7 @@ namespace SpriteStrife
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-            if (gameState == GameState.running)
+            if (gameState == GameState.Running)
             {
                 //bring out yer dead
                 for (int i = dMap.monsters.Count - 1; i >= 0; i--)
@@ -211,10 +204,6 @@ namespace SpriteStrife
                         //Console.WriteLine("cleaned up a monster");
                     }
                 }
-            }
-            else if (gameState == GameState.newGame)
-            {
-                
             }
             
             //handle keyboard and mouse input
@@ -243,17 +232,16 @@ namespace SpriteStrife
 
             //gui interaction
             Point mpoint = new Point(0,0);
-            if (dMap != null) mpoint = XYtoMap(newMState.X, newMState.Y);
-            gameState = gui.ProcessInput(this, gameState, oldKState, newKState, oldMState, newMState, hero, dMap, mpoint);
+            gameState = gui.ProcessInput(this, gameState, oldKState, newKState, oldMState, newMState, hero, dMap);
 
-            if (gameState == GameState.running)
+            if (gameState == GameState.Running)
             {
                 //save & menu functions
                 if (newKState.IsKeyDown(Keys.Escape) && !oldKState.IsKeyDown(Keys.Escape))
                 {
                     mapGen.SaveMap(hero.name, dMap);
                     heroGen.SaveHero(hero);
-                    gameState = GameState.mainMenu;
+                    gameState = GameState.MainMenu;
                 }
                 if (newKState.IsKeyDown(Keys.F5) && !oldKState.IsKeyDown(Keys.F5))
                 {
@@ -353,9 +341,9 @@ namespace SpriteStrife
             //clear the background
             GraphicsDevice.Clear(Color.Black);
 
-            spriteBatch.Begin();
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullCounterClockwise);
 
-            if (gameState == GameState.running)
+            if (gameState == GameState.Running)
             {
                 //draw the map
                 Rectangle cutter;
@@ -367,53 +355,51 @@ namespace SpriteStrife
                         if (dMap.vision[x, y] == Vision.Visible)
                         {
                             cutter = new Rectangle(dMap.alts[x, y] * dMap.tileSetSize, (int)dMap.floor[x, y] * dMap.tileSetSize, dMap.tileSetSize, dMap.tileSetSize);
-                            spriteBatch.Draw(tileSetImg, new Rectangle(x * dMap.tileSizeX + xOffset, y * dMap.tileSizeY + yOffset, dMap.tileSizeX, dMap.tileSizeY), cutter, Color.White);
+                            spriteBatch.Draw(tileSetImg, new Rectangle(x * dMap.tileSizeX + dMap.xOffset, y * dMap.tileSizeY + dMap.yOffset, dMap.tileSizeX, dMap.tileSizeY), cutter, Color.White);
                             if (dMap.objects[x, y].type >= 0)
                             {
                                 cutter = new Rectangle(dMap.objects[x, y].type * dMap.tileSetSize, 0, dMap.tileSetSize, dMap.tileSetSize);
-                                spriteBatch.Draw(objectSetImg, new Rectangle(x * dMap.tileSizeX + xOffset, y * dMap.tileSizeY + yOffset, dMap.tileSizeX, dMap.tileSizeY), cutter, Color.White);
+                                spriteBatch.Draw(objectSetImg, new Rectangle(x * dMap.tileSizeX + dMap.xOffset, y * dMap.tileSizeY + dMap.yOffset, dMap.tileSizeX, dMap.tileSizeY), cutter, Color.White);
                             }
                         }
                         else if (dMap.vision[x, y] == Vision.Explored)
                         {
                             cutter = new Rectangle(dMap.alts[x, y] * dMap.tileSetSize, (int)dMap.floor[x, y] * dMap.tileSetSize, dMap.tileSetSize, dMap.tileSetSize);
-                            spriteBatch.Draw(tileSetImg, new Rectangle(x * dMap.tileSizeX + xOffset, y * dMap.tileSizeY + yOffset, dMap.tileSizeX, dMap.tileSizeY), cutter, Color.DarkSlateGray);
+                            spriteBatch.Draw(tileSetImg, new Rectangle(x * dMap.tileSizeX + dMap.xOffset, y * dMap.tileSizeY + dMap.yOffset, dMap.tileSizeX, dMap.tileSizeY), cutter, Color.DarkSlateGray);
                             if (dMap.objects[x, y].type >= 0)
                             {
                                 cutter = new Rectangle(dMap.objects[x, y].type * dMap.tileSetSize, 0, dMap.tileSetSize, dMap.tileSetSize);
-                                spriteBatch.Draw(objectSetImg, new Rectangle(x * dMap.tileSizeX + xOffset, y * dMap.tileSizeY + yOffset, dMap.tileSizeX, dMap.tileSizeY), cutter, Color.DarkSlateBlue);
+                                spriteBatch.Draw(objectSetImg, new Rectangle(x * dMap.tileSizeX + dMap.xOffset, y * dMap.tileSizeY + dMap.yOffset, dMap.tileSizeX, dMap.tileSizeY), cutter, Color.DarkSlateBlue);
                             }
                         }
 
                         //if (debugmode)
                         //{
                         //    string output = dMap.floor[x, y].ToString();
-                        //    Vector2 FontPos = new Vector2(x * dMap.TileSizeX + xOffset, y * dMap.TileSizeY + yOffset);
+                        //    Vector2 FontPos = new Vector2(x * dMap.TileSizeX + dMap.xOffset, y * dMap.TileSizeY + dMap.yOffset);
                         //    spriteBatch.DrawString(CourierNew, output, FontPos, Color.White);
                         //}
                     }
                 }
 
                 //draw items
-                foreach (Item wonder in dMap.items)
-                {
-                    if (dMap.vision[wonder.MapX, wonder.MapY] == Vision.Visible)
-                    {
-                        spriteBatch.Draw(itemTex[(int)wonder.Type], new Rectangle(wonder.MapX * dMap.tileSizeX + xOffset, wonder.MapY * dMap.tileSizeY + yOffset, dMap.tileSizeX, dMap.tileSizeY), Color.White);
-                    }
-                }
-
-
+                //foreach (Item wonder in dMap.items)
+                //{
+                //    if (dMap.vision[wonder.MapX, wonder.MapY] == Vision.Visible)
+                //    {
+                //        spriteBatch.Draw(itemTex[wonder.type], new Rectangle(wonder.MapX * dMap.tileSizeX + dMap.xOffset, wonder.MapY * dMap.tileSizeY + dMap.yOffset, dMap.tileSizeX, dMap.tileSizeY), Color.White);
+                //    }
+                //}
 
                 //draw monsters
                 foreach (Monster fiend in dMap.monsters)
                 {
                     if (dMap.vision[fiend.mapX, fiend.mapY] == Vision.Visible)
                     {
-                        spriteBatch.Draw(monsterTex[fiend.type], new Rectangle(fiend.mapX * dMap.tileSizeX + xOffset, fiend.mapY * dMap.tileSizeY + yOffset, dMap.tileSizeX, dMap.tileSizeY), Color.White);
+                        spriteBatch.Draw(monsterTex[fiend.type], new Rectangle(fiend.mapX * dMap.tileSizeX + dMap.xOffset, fiend.mapY * dMap.tileSizeY + dMap.yOffset, dMap.tileSizeX, dMap.tileSizeY), Color.White);
                         if (debugmode)
                         {
-                            spriteBatch.DrawString(debugFont, string.Format("{0}\n{1}{2}", fiend.name, fiend.curAIMode.ToString().Substring(0, 2), fiend.delay), new Vector2(fiend.mapX * dMap.tileSizeX + xOffset, fiend.mapY * dMap.tileSizeY + yOffset), Color.Red);
+                            spriteBatch.DrawString(debugFont, string.Format("{0}\n{1}{2}", fiend.name, fiend.curAIMode.ToString().Substring(0, 2), fiend.delay), new Vector2(fiend.mapX * dMap.tileSizeX + dMap.xOffset, fiend.mapY * dMap.tileSizeY + dMap.yOffset), Color.Red);
                         }
                     }
                 }
@@ -447,28 +433,17 @@ namespace SpriteStrife
         /// <param name="refmob">The hero to center the map on.</param>
         private void AlignMap(Hero refmob)
         {
-            xOffset = GraphicsDevice.Viewport.Width / 2 - ((GraphicsDevice.Viewport.Width / 2) % dMap.tileSizeX) - (hero.mapX * dMap.tileSizeX);
-            yOffset = GraphicsDevice.Viewport.Height / 2 - ((GraphicsDevice.Viewport.Height / 2) % dMap.tileSizeY) - (hero.mapY * dMap.tileSizeY);
+            dMap.xOffset = GraphicsDevice.Viewport.Width / 2 - ((GraphicsDevice.Viewport.Width / 2) % dMap.tileSizeX) - (hero.mapX * dMap.tileSizeX);
+            dMap.yOffset = GraphicsDevice.Viewport.Height / 2 - ((GraphicsDevice.Viewport.Height / 2) % dMap.tileSizeY) - (hero.mapY * dMap.tileSizeY);
         }
 
-        /// <summary>
-        /// Converts screen coordinates to map coordinates.
-        /// </summary>
-        private Point XYtoMap(int inX, int inY)
-        {
-            int mx = (inX - xOffset) / dMap.tileSizeX;
-            int my = (inY - yOffset) / dMap.tileSizeY;
-            return new Point(mx, my);
-        }
-
-        
 
         protected void Window_ClientSizeChanged(object sender, System.EventArgs e)
         {
             if (GraphicsDevice.Viewport.Width < 840) InitGraphicsMode(840, GraphicsDevice.Viewport.Height, false);
             if (GraphicsDevice.Viewport.Height < 600) InitGraphicsMode(GraphicsDevice.Viewport.Width, 600, false);
-            AlignMap(hero);
             gui.UpdateAll(spriteBatch, true);
+            AlignMap(hero);
         }
 
         /// <summary>

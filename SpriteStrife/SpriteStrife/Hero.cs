@@ -24,6 +24,7 @@ namespace SpriteStrife
         public int mapX, mapY;
         public List<Point> mQueue;
         public float delay;
+        public StatSystem stats;
 
         public Hero(string hname, int htype)
         {
@@ -33,6 +34,7 @@ namespace SpriteStrife
             mQueue = new List<Point>();
             delay = 0;
             name = hname;
+            stats = new StatSystem();
         }
 
         public void Move(int newX, int newY, Map dMap, bool clearQueue = true)
