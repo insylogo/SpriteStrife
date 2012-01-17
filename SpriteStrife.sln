@@ -1,0 +1,24 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpriteStrife", "SpriteStrife\SpriteStrife\SpriteStrife.csproj", "{EEB9ACF7-2D43-4857-A71E-28DD1F7027AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpriteStrifeContent", "SpriteStrife\SpriteStrifeContent\SpriteStrifeContent.contentproj", "{C8722D69-6D08-4DF7-9C4E-F1EF11F98F6E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EEB9ACF7-2D43-4857-A71E-28DD1F7027AD}.Debug|x86.ActiveCfg = Debug|x86
+		{EEB9ACF7-2D43-4857-A71E-28DD1F7027AD}.Debug|x86.Build.0 = Debug|x86
+		{EEB9ACF7-2D43-4857-A71E-28DD1F7027AD}.Release|x86.ActiveCfg = Release|x86
+		{EEB9ACF7-2D43-4857-A71E-28DD1F7027AD}.Release|x86.Build.0 = Release|x86
+		{C8722D69-6D08-4DF7-9C4E-F1EF11F98F6E}.Debug|x86.ActiveCfg = Debug|x86
+		{C8722D69-6D08-4DF7-9C4E-F1EF11F98F6E}.Release|x86.ActiveCfg = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

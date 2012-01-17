@@ -1,0 +1,6 @@
+C:\Users\Rob\Desktop\homework\Spring 2011\CS133S\gibson_robert_lab_3\SpriteStrife\SpriteStrife\SpriteStrifeContent\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Cheswick\Desktop\SpriteStrife\SpriteStrife\SpriteStrifeContent\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\BB Admin\Desktop\xna projects\SpriteStrife\SpriteStrife\SpriteStrifeContent\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Rob\Desktop\SpriteStrife_1_14_12\SpriteStrife\SpriteStrife\SpriteStrifeContent\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Rob\Desktop\SpriteStrife_1_16_12\SpriteStrife\SpriteStrife\SpriteStrifeContent\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Rob\Desktop\SpriteStrife_1_16_12_2\SpriteStrife\SpriteStrife\SpriteStrifeContent\obj\x86\Debug\ResolveAssemblyReference.cache
