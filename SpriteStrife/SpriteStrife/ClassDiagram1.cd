@@ -1,1 +1,74 @@
- 
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="SpriteStrife.Stat" Collapsed="true">
+    <Position X="0.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAABAAAAgAAAAAAAAAAAAAAAAAAAAAAAQAgAAAAAAQ=</HashCode>
+      <FileName>Stat.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SpriteStrife.StatSystem" Collapsed="true">
+    <Position X="3.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABaACAkQBAEAAAAACCACAAAAAABAAABIAIEACAAAAAA=</HashCode>
+      <FileName>StatSystem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SpriteStrife.SearchState" Collapsed="true">
+    <Position X="3.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAgAAAAYAA=</HashCode>
+      <FileName>MapGen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SpriteStrife.Map" Collapsed="true">
+    <Position X="3.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACABAgACQQBAIQAAAEoKEAIAAQIAAAAAgCCyAAgABAA=</HashCode>
+      <FileName>MapGen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SpriteStrife.MapGen" Collapsed="true">
+    <Position X="1.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAQAAAAAAAAAAAAMAIAgAAAAEACAAAAAAAAA=</HashCode>
+      <FileName>MapGen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SpriteStrife.BresLine" Collapsed="true">
+    <Position X="1.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>MapGen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="SpriteStrife.MapObject" Collapsed="true">
+    <Position X="1.75" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAABAAAEAAAAAAAAAAA=</HashCode>
+      <FileName>MapGen.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Enum Name="SpriteStrife.StatType" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAkAAAEAAAAAACAAAAAAAABAAAAAAIEACAAAAAA=</HashCode>
+      <FileName>Stat.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SpriteStrife.FloorTypes" Collapsed="true">
+    <Position X="1.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAgAAAIAAAAAAAAAAAQAAAAACAAAAAA=</HashCode>
+      <FileName>MapGen.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SpriteStrife.Vision" Collapsed="true">
+    <Position X="3.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAAAAAAAAAAAAAAAIAIAAAAAAAAAAA=</HashCode>
+      <FileName>MapGen.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
