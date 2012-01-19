@@ -5,3 +5,4 @@ C:\Users\Rob\Desktop\SpriteStrife_1_14_12\SpriteStrife\SpriteStrife\SpriteStrife
 C:\Users\Rob\Desktop\SpriteStrife_1_16_12\SpriteStrife\SpriteStrife\SpriteStrifeContent\obj\x86\Debug\ResolveAssemblyReference.cache
 C:\Users\Cheswick\Desktop\SpriteStrife_1_16_12_2\SpriteStrife\SpriteStrife\SpriteStrifeContent\obj\x86\Debug\ResolveAssemblyReference.cache
 C:\Users\Rob\Desktop\SpriteStrife\SpriteStrife\SpriteStrifeContent\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Cheswick\gitprojects\SpriteStrife\SpriteStrife\SpriteStrifeContent\obj\x86\Debug\ResolveAssemblyReference.cache

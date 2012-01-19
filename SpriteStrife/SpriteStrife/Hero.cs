@@ -35,6 +35,10 @@ namespace SpriteStrife
             delay = 0;
             name = hname;
             stats = new StatSystem();
+            stats.SetBaseStat(StatType.Health, 23);
+            stats.SetBaseStat(StatType.Vitality, 13);
+            stats.SetBaseStat(StatType.Sanity, 8);
+            stats.DrainStat(StatType.Health, 9);
         }
 
         public void Move(int newX, int newY, Map dMap, bool clearQueue = true)

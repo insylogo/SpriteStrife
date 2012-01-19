@@ -61,7 +61,7 @@ namespace SpriteStrife
 
         public int GetStat(StatType type)
         {
-            return stats[(int)type].Value;
+            return stats[(int)type].MaxValue;
         }
 
         public int GetBaseStat(StatType type)
@@ -84,11 +84,20 @@ namespace SpriteStrife
             return stats[(int)type].Modifier;
         }
 
+        public void DrainStat(StatType type, int drainAmt)
+        {
+            stats[(int)type].Drain(drainAmt);
+        }
+        public void RestoreStat(StatType type, int restoAmt)
+        {
+            stats[(int)type].Restore(restoAmt);
+        }
+
         public int Strength
         {
             get
             {
-                return stats[(int)StatType.Strength].Value;
+                return stats[(int)StatType.Strength].MaxValue;
             }
         }
 
@@ -96,7 +105,7 @@ namespace SpriteStrife
         {
             get
             {
-                return stats[(int)StatType.Toughness].Value;
+                return stats[(int)StatType.Toughness].MaxValue;
             }
         }
 
@@ -104,7 +113,7 @@ namespace SpriteStrife
         {
             get
             {
-                return stats[(int)StatType.Health].Value;
+                return stats[(int)StatType.Health].MaxValue;
             }
         }
 
@@ -112,7 +121,7 @@ namespace SpriteStrife
         {
             get
             {
-                return stats[(int)StatType.Intellect].Value;
+                return stats[(int)StatType.Intellect].MaxValue;
             }
         }
 
@@ -120,7 +129,7 @@ namespace SpriteStrife
         {
             get
             {
-                return stats[(int)StatType.Perception].Value;
+                return stats[(int)StatType.Perception].MaxValue;
             }
         }
 
@@ -129,7 +138,7 @@ namespace SpriteStrife
         {
             get
             {
-                return stats[(int)StatType.Sanity].Value;
+                return stats[(int)StatType.Sanity].MaxValue;
             }
         }
 
@@ -137,21 +146,21 @@ namespace SpriteStrife
         {
             get
             {
-                return stats[(int)StatType.Faith].Value;
+                return stats[(int)StatType.Faith].MaxValue;
             }
         }
         public int Wisdom
         {
             get
             {
-                return stats[(int)StatType.Wisdom].Value;
+                return stats[(int)StatType.Wisdom].MaxValue;
             }
         }
         public int Vitality
         {
             get
             {
-                return stats[(int)StatType.Vitality].Value;
+                return stats[(int)StatType.Vitality].MaxValue;
             }
         }
 

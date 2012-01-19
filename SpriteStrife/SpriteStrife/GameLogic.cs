@@ -168,12 +168,15 @@ namespace SpriteStrife
 
         public void ContinueGame(string hname)
         {
-            dMap = mapGen.LoadMap("testchar", 0);
-            hero = heroGen.LoadHero("testchar");
+            if (System.IO.Directory.Exists("testchar"))
+            {
+                dMap = mapGen.LoadMap("testchar", 0);
+                hero = heroGen.LoadHero("testchar");
 
-            FixMap();
+                FixMap();
 
-            gameState = GameState.Running;
+                gameState = GameState.Running;
+            }
         }
 
         public void BuryGame(string hname)
@@ -241,6 +244,7 @@ namespace SpriteStrife
                 {
                     mapGen.SaveMap(hero.name, dMap);
                     heroGen.SaveHero(hero);
+                    gui.mainMenu.children[1].enabled = true;
                     gameState = GameState.MainMenu;
                 }
                 if (newKState.IsKeyDown(Keys.F5) && !oldKState.IsKeyDown(Keys.F5))

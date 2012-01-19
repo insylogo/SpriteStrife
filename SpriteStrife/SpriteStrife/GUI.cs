@@ -29,6 +29,7 @@ namespace SpriteStrife
             public Texture2D bg;
             public Texture2D frameBorders;
             public bool needUpdate;
+            public bool visible;
 
             public Box(GraphicsDevice gd, int x, int y, int wd, int ht, Color bgc, Color bdc, Texture2D fb)
             {
@@ -46,6 +47,8 @@ namespace SpriteStrife
                 bg.SetData<Color>(tbg);
 
                 needUpdate = true;
+
+                visible = true;
             }
 
             public void MoveTo(int x, int y)
@@ -107,7 +110,7 @@ namespace SpriteStrife
 
             public void Draw(SpriteBatch screen)
             {
-                screen.Draw(Surf, Rect, Color.White);
+                if (visible) screen.Draw(Surf, Rect, Color.White);
             }
         }
 
@@ -118,8 +121,10 @@ namespace SpriteStrife
             public string labelText;
             public bool highlight;
             public bool enabled;
+            public List<MenuItem> children;
+            
 
-            public MenuItem(string itemText, int x, int y, SpriteFont mfont)
+            public MenuItem(string itemText, SpriteFont mfont, int x = 0, int y = 0)
             {
                 labelText = itemText;
                 labelLoc = new Vector2((int)(x - (mfont.MeasureString(labelText).X / 2)), (int)(y - (mfont.MeasureString(labelText).Y / 2)));
@@ -127,6 +132,25 @@ namespace SpriteStrife
                 rect.Inflate(5, 5);
                 highlight = false;
                 enabled = true;
+                children = new List<MenuItem>();
+            }
+
+            public void OpenMenu(int x, int y, SpriteFont mfont)
+            {
+                int yoff = 0;
+                
+                foreach (MenuItem mitem in children)
+                {
+                    mitem.labelLoc = new Vector2((int)(x - (mfont.MeasureString(mitem.labelText).X / 2)), (int)(yoff + y - (mfont.MeasureString(mitem.labelText).Y / 2)));
+                    mitem.rect = new Rectangle((int)mitem.labelLoc.X, (int)mitem.labelLoc.Y, (int)mfont.MeasureString(mitem.labelText).X, (int)mfont.MeasureString(mitem.labelText).Y);
+                    rect.Inflate(5, 5);
+                    yoff += 50;
+                }
+            }
+
+            public void DrawMenu(SpriteBatch screen, SpriteFont mfont)
+            {
+
             }
         }
 
@@ -149,19 +173,20 @@ namespace SpriteStrife
         public List<Box> boxes;
         public Color bgCol, bdCol, hlCol;
         public double osc;
-        public Texture2D frameBorders, mmtile, mmmark, mmblock, itemcircle;
+        public Texture2D frameBorders, mmtile, mmmark, mmblock, itemcircle, statglobe;
         public List<Texture2D> actIcons;
-        public SpriteFont logFont, menuFont;
+        public SpriteFont logFont, menuFont, statFont;
         public List<string> logLines;
         public List<Color> logColors;
         public int logOff;
         public int selAct;
         public Texture2D statBar;
-        public List<MenuItem> mainMenu;
+        public MenuItem mainMenu;
         public List<MenuItem> gyMenu;
         public List<DeathCertificate> graves;
         public Texture2D graveTex;
         public List<Texture2D> overlays;
+        public Point statsLoc;
 
         public GUI(GraphicsDevice gd, ContentManager cm, Color bgc, Color bdc)
         {
@@ -200,26 +225,43 @@ namespace SpriteStrife
             logOff = 0;
 
             statBar = cm.Load<Texture2D>("gui_statbar");
+            statglobe = cm.Load<Texture2D>("gui_globe");
+            statFont = cm.Load<SpriteFont>("font_atari18s");
 
             boxes = new List<Box>();
             boxes.Add(new Box(gD, 10, -10, 300, 100, bgCol, bdCol, frameBorders)); //log
             boxes.Add(new Box(gD, 10, 10, 170, 170, bgCol, bdCol, frameBorders)); //minimap
             boxes.Add(new Box(gD, -10, 10, 180, 300, bgCol, bdCol, frameBorders)); //stats
+            boxes[2].visible = false;
             boxes.Add(new Box(gD, -10, -10, 510, 60, bgCol, bdCol, frameBorders)); //action bar
 
-            mainMenu = new List<MenuItem>();
-            mainMenu.Add(new MenuItem("New Game", gD.Viewport.Width / 2, 150, menuFont));
-            mainMenu.Add(new MenuItem("Continue", gD.Viewport.Width / 2, 200, menuFont));
-            mainMenu.Add(new MenuItem("Tutorial", gD.Viewport.Width / 2, 250, menuFont));
-            mainMenu.Add(new MenuItem("Options", gD.Viewport.Width / 2, 300, menuFont));
-            mainMenu.Add(new MenuItem("Graveyard", gD.Viewport.Width / 2, 350, menuFont));
-            mainMenu.Add(new MenuItem("Exit", gD.Viewport.Width / 2, 400, menuFont));
-            mainMenu[2].enabled = false;
-            mainMenu[3].enabled = false;
+            mainMenu = new MenuItem("Main", menuFont);
+            //mainMenu.Add(new MenuItem("New Game", gD.Viewport.Width / 2, 150, menuFont));
+            //mainMenu.Add(new MenuItem("Continue", gD.Viewport.Width / 2, 200, menuFont));
+            //mainMenu.Add(new MenuItem("Tutorial", gD.Viewport.Width / 2, 250, menuFont));
+            //mainMenu.Add(new MenuItem("Options", gD.Viewport.Width / 2, 300, menuFont));
+            //mainMenu.Add(new MenuItem("Graveyard", gD.Viewport.Width / 2, 350, menuFont));
+            //mainMenu.Add(new MenuItem("Exit", gD.Viewport.Width / 2, 400, menuFont));
+            mainMenu.children.Add(new MenuItem("New Game", menuFont));
+            mainMenu.children.Add(new MenuItem("Continue", menuFont));
+            mainMenu.children.Add(new MenuItem("Tutorial", menuFont));
+            mainMenu.children.Add(new MenuItem("Options", menuFont));
+            mainMenu.children.Add(new MenuItem("Graveyard", menuFont));
+            mainMenu.children.Add(new MenuItem("Exit", menuFont));
+            mainMenu.children[2].enabled = false;
+            mainMenu.children[3].enabled = false;
+            if (!System.IO.Directory.Exists("testchar")) mainMenu.children[1].enabled = false;
+            mainMenu.children[1].children.Add(new MenuItem("Some", menuFont));
+            mainMenu.children[1].children.Add(new MenuItem("Child", menuFont));
+            mainMenu.children[1].children.Add(new MenuItem("Menus", menuFont));
+            mainMenu.children[1].children[2].children.Add(new MenuItem("Even", menuFont));
+            mainMenu.children[1].children[2].children.Add(new MenuItem("More", menuFont));
+
+            mainMenu.OpenMenu(gD.Viewport.Width / 2, 100, menuFont);
 
             graveTex = cm.Load<Texture2D>("gravestones");
             gyMenu = new List<MenuItem>();
-            gyMenu.Add(new MenuItem("< Back", 150, 80, menuFont));
+            gyMenu.Add(new MenuItem("< Back", menuFont, 150, 80));
 
             //graves = new List<DeathCertificate>();
             //Random grand = new Random();
@@ -337,8 +379,14 @@ namespace SpriteStrife
                 screen.Draw(mmmark, prect, Color.Lime);
 
                 //stats
-                screen.Draw(statBar, new Rectangle(boxes[2].contRect.Left + 5, boxes[2].contRect.Top + 5, boxes[2].contRect.Width - 10, 20), Color.Green);
-                screen.Draw(statBar, new Rectangle(boxes[2].contRect.Left + 5, boxes[2].contRect.Top + 30, boxes[2].contRect.Width - 10, 20), Color.BlueViolet);
+                //screen.Draw(statBar, new Rectangle(boxes[2].contRect.Left + 5, boxes[2].contRect.Top + 5, boxes[2].contRect.Width - 10, 20), Color.Green);
+                //screen.Draw(statBar, new Rectangle(boxes[2].contRect.Left + 5, boxes[2].contRect.Top + 30, boxes[2].contRect.Width - 10, 20), Color.BlueViolet);
+                screen.Draw(statglobe, new Rectangle(statsLoc.X, statsLoc.Y - 40, 60, 60), Color.Red);
+                screen.DrawString(statFont, hero.stats.Health.ToString(), new Vector2(statsLoc.X + 30 - (int)statFont.MeasureString(hero.stats.Health.ToString()).X / 2, statsLoc.Y - 10 - (int)statFont.MeasureString(hero.stats.Health.ToString()).Y / 2), Color.LightGray);
+                screen.Draw(statglobe, new Rectangle(statsLoc.X - 35, statsLoc.Y + 20, 60, 60), Color.Green);
+                screen.DrawString(statFont, hero.stats.Vitality.ToString(), new Vector2(statsLoc.X - 5 - (int)statFont.MeasureString(hero.stats.Vitality.ToString()).X / 2, statsLoc.Y + 50 - (int)statFont.MeasureString(hero.stats.Vitality.ToString()).Y / 2), Color.LightGray);
+                screen.Draw(statglobe, new Rectangle(statsLoc.X + 35, statsLoc.Y + 20, 60, 60), Color.Blue);
+                screen.DrawString(statFont, hero.stats.Sanity.ToString(), new Vector2(statsLoc.X + 65 - (int)statFont.MeasureString(hero.stats.Sanity.ToString()).X / 2, statsLoc.Y + 50 - (int)statFont.MeasureString(hero.stats.Sanity.ToString()).Y / 2), Color.LightGray);
 
                 //action bar
                 for (int i = 0; i < 10; i++)
@@ -355,7 +403,7 @@ namespace SpriteStrife
             }
             else if (gameState == GameState.MainMenu)
             {
-                foreach (MenuItem mitem in mainMenu)
+                foreach (MenuItem mitem in mainMenu.children)
                 {
                     if (mitem.enabled && mitem.highlight)
                     {
@@ -434,12 +482,14 @@ namespace SpriteStrife
             //center menu items
             if (forceUpdate)
             {
-                foreach (MenuItem mitem in mainMenu)
+                foreach (MenuItem mitem in mainMenu.children)
                 {
                     mitem.labelLoc = new Vector2((int)((gD.Viewport.Width / 2) - (menuFont.MeasureString(mitem.labelText).X / 2)), (int)(mitem.labelLoc.Y));
                     mitem.rect = new Rectangle((int)mitem.labelLoc.X, (int)mitem.labelLoc.Y, (int)menuFont.MeasureString(mitem.labelText).X, (int)menuFont.MeasureString(mitem.labelText).Y);
                 }
             }
+
+            statsLoc = new Point(gD.Viewport.Width - 105, gD.Viewport.Height - 160);
 
             //multipurpose oscillator
             osc += 0.05;
@@ -532,31 +582,31 @@ namespace SpriteStrife
             }
             else if (gameState == GameState.MainMenu)
             {
-                foreach (MenuItem mitem in mainMenu)
+                foreach (MenuItem mitem in mainMenu.children)
                 {
                     mitem.highlight = false;
                 }
-                foreach (MenuItem mitem in mainMenu)
+                foreach (MenuItem mitem in mainMenu.children)
                 {
                     if (mitem.rect.Contains(new Point(nMS.X, nMS.Y)))
                     {
                         if (nMS.LeftButton == ButtonState.Pressed && oMS.LeftButton == ButtonState.Released)
                         {
-                            if (mainMenu.IndexOf(mitem) == 0)
+                            if (mainMenu.children.IndexOf(mitem) == 0)
                             {
                                 gamelogic.NewGame("testchar", 0);
                                 return GameState.Running;
                             }
-                            else if (mainMenu.IndexOf(mitem) == 1)
+                            else if (mainMenu.children.IndexOf(mitem) == 1)
                             {
                                 gamelogic.ContinueGame("testchar");
                                 return GameState.Running;
                             }
-                            else if (mainMenu.IndexOf(mitem) == 4)
+                            else if (mainMenu.children.IndexOf(mitem) == 4)
                             {
                                 return GameState.Graveyard;
                             }
-                            else if (mainMenu.IndexOf(mitem) == 5)
+                            else if (mainMenu.children.IndexOf(mitem) == 5)
                             {
                                 gamelogic.Exit();
                             }
@@ -608,10 +658,18 @@ namespace SpriteStrife
         public List<DeathCertificate> LoadGraves()
         {
             List<DeathCertificate> tgraves;
-            BinaryFormatter bf = new BinaryFormatter();
-            FileStream reader = File.OpenRead("graves.bin");
-            tgraves = (List<DeathCertificate>)bf.Deserialize(reader);
-            reader.Close();
+            if (System.IO.File.Exists("graves.bin"))
+            {
+
+                BinaryFormatter bf = new BinaryFormatter();
+                FileStream reader = File.OpenRead("graves.bin");
+                tgraves = (List<DeathCertificate>)bf.Deserialize(reader);
+                reader.Close();
+            }
+            else
+            {
+                tgraves = new List<DeathCertificate>();
+            }
 
             return tgraves;
         }
