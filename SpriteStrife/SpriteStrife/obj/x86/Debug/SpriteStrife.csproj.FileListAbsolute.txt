@@ -483,3 +483,5 @@ C:\Users\Cheswick\gitprojects\SpriteStrife\SpriteStrife\SpriteStrife\bin\x86\Deb
 C:\Users\Cheswick\gitprojects\SpriteStrife\SpriteStrife\SpriteStrife\bin\x86\Debug\SpriteStrife.application
 C:\Users\Cheswick\gitprojects\SpriteStrife\SpriteStrife\SpriteStrife\obj\x86\Debug\SpriteStrife.exe.manifest
 C:\Users\Cheswick\gitprojects\SpriteStrife\SpriteStrife\SpriteStrife\obj\x86\Debug\SpriteStrife.application
+C:\Users\Cheswick\gitprojects\SpriteStrife\SpriteStrife\SpriteStrife\bin\x86\Debug\Content\gui_frameborders2.xnb
+C:\Users\Cheswick\gitprojects\SpriteStrife\SpriteStrife\SpriteStrife\bin\x86\Debug\Content\gui_frameborders3.xnb

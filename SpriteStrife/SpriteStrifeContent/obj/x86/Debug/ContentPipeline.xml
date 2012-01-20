@@ -604,6 +604,24 @@
       <Output>C:\Users\Cheswick\gitprojects\SpriteStrife\SpriteStrife\SpriteStrife\bin\x86\Debug\Content\font_atari18s.xnb</Output>
       <Time>2012-01-19T11:34:03.7096-08:00</Time>
     </Item>
+    <Item>
+      <Source>gui_frameborders2.png</Source>
+      <Name>gui_frameborders2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Cheswick\gitprojects\SpriteStrife\SpriteStrife\SpriteStrife\bin\x86\Debug\Content\gui_frameborders2.xnb</Output>
+      <Time>2012-01-20T11:26:22.1173-08:00</Time>
+    </Item>
+    <Item>
+      <Source>gui_frameborders3.png</Source>
+      <Name>gui_frameborders3</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>C:\Users\Cheswick\gitprojects\SpriteStrife\SpriteStrife\SpriteStrife\bin\x86\Debug\Content\gui_frameborders3.xnb</Output>
+      <Time>2012-01-20T11:32:18.5943-08:00</Time>
+    </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
       <TargetPlatform>Windows</TargetPlatform>

@@ -93,14 +93,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SpriteStrife.exe" size="54784">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SpriteStrife.exe" size="56320">
       <assemblyIdentity name="SpriteStrife" version="1.0.0.0" language="neutral" processorArchitecture="x86" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>cJdMc/gXBmSUp6jBaYYVGQodbls=</dsig:DigestValue>
+        <dsig:DigestValue>d7kw8V1BwF2URe0cxoAtswSW1IA=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -147,6 +147,24 @@
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
       <dsig:DigestValue>cTjbssy33SBaRjQPUa2EzxRWmiM=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="Content\gui_frameborders2.xnb" size="1087">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>hXESmFziKlC+zOOjxWrlo2Y1RyE=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="Content\gui_frameborders3.xnb" size="1087">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>PAkkNvvtbK7KPkanoyQbom/hlF4=</dsig:DigestValue>
     </hash>
   </file>
   <file name="Content\gui_globe.xnb" size="14587">

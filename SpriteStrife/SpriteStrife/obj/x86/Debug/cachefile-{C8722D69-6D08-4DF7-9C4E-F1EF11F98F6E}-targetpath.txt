@@ -65,3 +65,5 @@ Content\gui_overlay_arrow.xnb
 Content\gui_overlay_target.xnb
 Content\gui_globe.xnb
 Content\font_atari18s.xnb
+Content\gui_frameborders2.xnb
+Content\gui_frameborders3.xnb

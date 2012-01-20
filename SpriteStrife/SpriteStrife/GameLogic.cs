@@ -124,7 +124,13 @@ namespace SpriteStrife
             //load textures for gui elements and create gui
             Texture2D fb = this.Content.Load<Texture2D>("gui_frameborders");
             gui = new GUI(GraphicsDevice, Content, new Color(20, 20, 100, 180), new Color(100, 100, 220, 180));
-            gui.mainMenu.AddChild("New Game", NewGame);
+            gui.mainMenu.AddChild("New Game", null);
+            gui.mainMenu.children[0].AddChild("Warrior", NewGame);
+            gui.mainMenu.children[0].AddChild("Archer", NewGame);
+            gui.mainMenu.children[0].AddChild("Rogue", NewGame);
+            gui.mainMenu.children[0].AddChild("Wizard", NewGame);
+            gui.mainMenu.children[0].AddChild("Ascetic", NewGame);
+            gui.mainMenu.children[0].AddChild("Mystic", NewGame);
             gui.mainMenu.AddChild("Continue", ContinueGame);
             gui.mainMenu.AddChild("Tutorial", OpenTutorial, GUI.mItemStatus.Disabled);
             gui.mainMenu.AddChild("Options", OpenOptions, GUI.mItemStatus.Disabled);

@@ -114,7 +114,7 @@ namespace SpriteStrife
             }
         }
 
-        public enum mItemStatus { Enabled = 0, Disabled, Hidden, Highlight, Expanded }
+        public enum mItemStatus { Enabled = 0, Disabled, Hidden, Highlight }
         public enum mCommand { Open = 0, Back, MainMenu, Graveyard, NewGame, LoadGame, Exit }
 
         public class MenuItem
@@ -128,6 +128,7 @@ namespace SpriteStrife
             public MenuCommand command;
             public SpriteFont mFont;
             public MenuItem parent;
+            public bool expanded;
 
             public MenuItem(string itemText, SpriteFont mfont, MenuItem mparent = null, mItemStatus mstatus = mItemStatus.Enabled)
             {
@@ -139,11 +140,28 @@ namespace SpriteStrife
                 rect.Inflate(5, 5);
                 children = new List<MenuItem>();
                 parent = mparent;
+                expanded = false;
+            }
+
+            public void FixNames()
+            {
+                foreach (MenuItem mitem in children)
+                {
+                    if (mitem.children.Count > 0)
+                    {
+                        mitem.labelText = mitem.labelText.TrimEnd("< >".ToArray<char>());
+                        if (mitem.expanded) mitem.labelText += " <";
+                        else mitem.labelText += " >";
+                        mitem.FixNames();
+                    }
+                }
             }
 
             public void AddChild(string itemtext, MenuCommand mcmd, mItemStatus stat = mItemStatus.Enabled)
             {
+                
                 children.Add(new MenuItem(itemtext, mFont, this));
+                if (mcmd == null) mcmd = ExpandCollapse;
                 children[children.Count - 1].command = mcmd;
                 children[children.Count - 1].status = stat;
             }
@@ -154,12 +172,43 @@ namespace SpriteStrife
                 
                 foreach (MenuItem mitem in children)
                 {
+                    mitem.labelText = mitem.labelText.TrimEnd("< >".ToArray<char>());
                     mitem.labelLoc = new Vector2((int)(x - (mFont.MeasureString(mitem.labelText).X / 2)), (int)(yoff + y - (mFont.MeasureString(mitem.labelText).Y / 2)));
                     mitem.rect = new Rectangle((int)mitem.labelLoc.X, (int)mitem.labelLoc.Y, (int)mFont.MeasureString(mitem.labelText).X, (int)mFont.MeasureString(mitem.labelText).Y);
                     rect.Inflate(5, 5);
                     yoff += 50;
+                    if (mitem.children.Count > 0)
+                    {
+                        mitem.OpenMenu(x + 300, y);
+                    }
+                }
+                FixNames();
+            }
+
+            public void DefaultCommand(string argstr)
+            {
+                //if (children.Count > 0) ExpandCollapse(argstr);
+            }
+
+            public void ExpandCollapse(string argstr)
+            {
+                if (children.Count > 0)
+                {
+                    if ((status == mItemStatus.Enabled || status == mItemStatus.Highlight) && !expanded)
+                    {
+                        labelText = labelText.TrimEnd("< >".ToArray<char>());
+                        labelText += " <";
+                        expanded = true;
+                    }
+                    else if (expanded)
+                    {
+                        labelText = labelText.TrimEnd("< >".ToArray<char>());
+                        labelText += " >";
+                        expanded = false;
+                    }
                 }
             }
+
 
             public void ClearHighlight()
             {
@@ -172,7 +221,6 @@ namespace SpriteStrife
 
             public void MenuHover(int mx, int my)
             {
-                ClearHighlight();
                 Point mloc = new Point(mx, my);
                 foreach (MenuItem mitem in children)
                 {
@@ -183,6 +231,10 @@ namespace SpriteStrife
                             mitem.status = mItemStatus.Highlight;
                         }
                     }
+                    if (mitem.expanded)
+                    {
+                        mitem.MenuHover(mx, my);
+                    }
                 }
             }
 
@@ -191,9 +243,14 @@ namespace SpriteStrife
                 Point mloc = new Point(mx, my);
                 foreach (MenuItem mitem in children)
                 {
-                    if (mitem.rect.Contains(mloc))
+                    if ((mitem.status == mItemStatus.Enabled || mitem.status == mItemStatus.Highlight) && mitem.rect.Contains(mloc))
                     {
+                        mitem.ExpandCollapse("junk");
                         mitem.command(mitem.labelText);
+                    }
+                    if (mitem.expanded)
+                    {
+                        mitem.MenuClick(mx, my);
                     }
                 }
             }
@@ -213,6 +270,11 @@ namespace SpriteStrife
                     else if (mitem.status == mItemStatus.Disabled)
                     {
                         screen.DrawString(mFont, mitem.labelText, mitem.labelLoc, Color.Gray);
+                    }
+
+                    if (mitem.expanded)
+                    {
+                        mitem.DrawMenu(screen, hlCol);
                     }
                 }
             }
@@ -254,7 +316,7 @@ namespace SpriteStrife
 
         public GUI(GraphicsDevice gd, ContentManager cm, Color bgc, Color bdc)
         {
-            frameBorders = cm.Load<Texture2D>("gui_frameborders");
+            frameBorders = cm.Load<Texture2D>("gui_frameborders2");
             gD = gd;
             scrSizeX = gD.Viewport.Width;
             scrSizeY = gD.Viewport.Height;
@@ -300,8 +362,6 @@ namespace SpriteStrife
             boxes.Add(new Box(gD, -10, -10, 510, 60, bgCol, bdCol, frameBorders)); //action bar
 
             mainMenu = new MenuItem("Main", menuFont);
-            
-            curMenu = mainMenu;
 
             graveTex = cm.Load<Texture2D>("gravestones");
 
@@ -445,7 +505,7 @@ namespace SpriteStrife
             }
             else if (gameState == GameState.MainMenu)
             {
-                curMenu.DrawMenu(screen, hlCol);
+                mainMenu.DrawMenu(screen, hlCol);
             }
             else if (gameState == GameState.Graveyard)
             {
@@ -513,7 +573,7 @@ namespace SpriteStrife
             if (osc > Math.PI) osc -= Math.PI;
 
             //update highlight color
-            hlCol = new Color(0.2f, (float)Math.Sin(osc), 1f-(float)Math.Sin(osc));
+            hlCol = new Color(0.2f, 0.4f + (0.6f * (float)Math.Sin(osc)), 0.2f);
         }
 
         public bool CatchClick(Point clickLoc, MouseState mouse)
@@ -604,6 +664,7 @@ namespace SpriteStrife
             }
             else if (gameState == GameState.MainMenu)
             {
+                mainMenu.ClearHighlight();
                 mainMenu.MenuHover(nMS.X, nMS.Y);
                 if (nMS.LeftButton == ButtonState.Pressed && oMS.LeftButton == ButtonState.Released)
                 {
@@ -619,42 +680,6 @@ namespace SpriteStrife
                 }
             }
         }
-
-        //public GameState DoMenuCommand(MenuItem mitem, GameState gameState, GameLogic game, Hero hero, Map dmap)
-        //{
-        //    if (mcmd == mCommand.Open)
-        //    {
-        //        if (mitem.children.Count > 0)
-        //        {
-        //            //open menu
-        //        }
-        //    }
-        //    else if (mcmd == mCommand.Back)
-        //    {
-        //        //close menu
-        //    }
-        //    else if (mcmd == mCommand.NewGame)
-        //    {
-        //        game.NewGame("testchar", 0);
-        //    }
-        //    else if (mcmd == mCommand.LoadGame)
-        //    {
-        //        game.ContinueGame("testchar");
-        //    }
-        //    else if (mcmd == mCommand.Graveyard)
-        //    {
-        //        return GameState.Graveyard;
-        //    }
-        //    else if (mcmd == mCommand.Exit)
-        //    {
-        //        game.Exit();
-        //    }
-        //    else if (mcmd == mCommand.MainMenu)
-        //    {
-        //        return GameState.MainMenu;
-        //    }
-        //    return gameState;
-        //}
 
         public void SaveGraves()
         {
