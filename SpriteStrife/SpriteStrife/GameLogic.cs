@@ -124,6 +124,13 @@ namespace SpriteStrife
             //load textures for gui elements and create gui
             Texture2D fb = this.Content.Load<Texture2D>("gui_frameborders");
             gui = new GUI(GraphicsDevice, Content, new Color(20, 20, 100, 180), new Color(100, 100, 220, 180));
+            gui.mainMenu.AddChild("New Game", NewGame);
+            gui.mainMenu.AddChild("Continue", ContinueGame);
+            gui.mainMenu.AddChild("Tutorial", OpenTutorial, GUI.mItemStatus.Disabled);
+            gui.mainMenu.AddChild("Options", OpenOptions, GUI.mItemStatus.Disabled);
+            gui.mainMenu.AddChild("Graveyard", OpenGraveyard);
+            gui.mainMenu.AddChild("Exit Game", EndGame);
+            gui.mainMenu.OpenMenu(GraphicsDevice.Viewport.Width / 2, 100);
             
             //load tileset and generate map
             tileSetImg = this.Content.Load<Texture2D>("tileset_basic");
@@ -147,14 +154,14 @@ namespace SpriteStrife
             }
         }
 
-        public void NewGame(string hname, int hclass)
+        public void NewGame(string hclass)
         {
             dMap = mapGen.GenerateMap();
             
             gui.LogEntry("Welcome to Sprite Strife!", Color.LightGray);
 
             //create the hero
-            hero = new Hero(hname, 0);
+            hero = new Hero("testchar", 0);
             hero.mapX = dMap.startingLocation.X;
             hero.mapY = dMap.startingLocation.Y;
 
@@ -179,9 +186,39 @@ namespace SpriteStrife
             }
         }
 
+        public void EndGame(string argstr)
+        {
+            Exit();
+        }
+
         public void BuryGame(string hname)
         {
             //code to delete map files and add hero to graveyard on game end
+        }
+
+        public void OpenGraveyard(string argstr)
+        {
+            gameState = GameState.Graveyard;
+        }
+
+        public void OpenMainMenu(string argstr)
+        {
+            if (gameState == GameState.Running)
+            {
+                mapGen.SaveMap(hero.name, dMap);
+                heroGen.SaveHero(hero);
+            }
+            gameState = GameState.MainMenu;
+        }
+
+        public void OpenTutorial(string argstr)
+        {
+
+        }
+
+        public void OpenOptions(string argstr)
+        {
+
         }
 
         /// <summary>
@@ -235,18 +272,12 @@ namespace SpriteStrife
 
             //gui interaction
             Point mpoint = new Point(0,0);
-            gameState = gui.ProcessInput(this, gameState, oldKState, newKState, oldMState, newMState, hero, dMap);
+            gui.ProcessInput(this, gameState, oldKState, newKState, oldMState, newMState, hero, dMap);
 
             if (gameState == GameState.Running)
             {
                 //save & menu functions
-                if (newKState.IsKeyDown(Keys.Escape) && !oldKState.IsKeyDown(Keys.Escape))
-                {
-                    mapGen.SaveMap(hero.name, dMap);
-                    heroGen.SaveHero(hero);
-                    gui.mainMenu.children[1].enabled = true;
-                    gameState = GameState.MainMenu;
-                }
+                
                 if (newKState.IsKeyDown(Keys.F5) && !oldKState.IsKeyDown(Keys.F5))
                 {
                     heroGen.SaveHero(hero);

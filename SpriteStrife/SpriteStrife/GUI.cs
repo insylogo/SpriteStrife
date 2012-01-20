@@ -114,43 +114,107 @@ namespace SpriteStrife
             }
         }
 
+        public enum mItemStatus { Enabled = 0, Disabled, Hidden, Highlight, Expanded }
+        public enum mCommand { Open = 0, Back, MainMenu, Graveyard, NewGame, LoadGame, Exit }
+
         public class MenuItem
         {
             public Rectangle rect;
             public Vector2 labelLoc;
             public string labelText;
-            public bool highlight;
-            public bool enabled;
+            public mItemStatus status;
             public List<MenuItem> children;
-            
+            public delegate void MenuCommand(string arg1);
+            public MenuCommand command;
+            public SpriteFont mFont;
+            public MenuItem parent;
 
-            public MenuItem(string itemText, SpriteFont mfont, int x = 0, int y = 0)
+            public MenuItem(string itemText, SpriteFont mfont, MenuItem mparent = null, mItemStatus mstatus = mItemStatus.Enabled)
             {
+                status = mstatus;
+                mFont = mfont;
                 labelText = itemText;
-                labelLoc = new Vector2((int)(x - (mfont.MeasureString(labelText).X / 2)), (int)(y - (mfont.MeasureString(labelText).Y / 2)));
-                rect = new Rectangle((int)labelLoc.X, (int)labelLoc.Y, (int)mfont.MeasureString(labelText).X, (int)mfont.MeasureString(labelText).Y);
+                //labelLoc = new Vector2((int)(x - (mfont.MeasureString(labelText).X / 2)), (int)(y - (mfont.MeasureString(labelText).Y / 2)));
+                //rect = new Rectangle((int)labelLoc.X, (int)labelLoc.Y, (int)mfont.MeasureString(labelText).X, (int)mfont.MeasureString(labelText).Y);
                 rect.Inflate(5, 5);
-                highlight = false;
-                enabled = true;
                 children = new List<MenuItem>();
+                parent = mparent;
             }
 
-            public void OpenMenu(int x, int y, SpriteFont mfont)
+            public void AddChild(string itemtext, MenuCommand mcmd, mItemStatus stat = mItemStatus.Enabled)
+            {
+                children.Add(new MenuItem(itemtext, mFont, this));
+                children[children.Count - 1].command = mcmd;
+                children[children.Count - 1].status = stat;
+            }
+
+            public void OpenMenu(int x, int y)
             {
                 int yoff = 0;
                 
                 foreach (MenuItem mitem in children)
                 {
-                    mitem.labelLoc = new Vector2((int)(x - (mfont.MeasureString(mitem.labelText).X / 2)), (int)(yoff + y - (mfont.MeasureString(mitem.labelText).Y / 2)));
-                    mitem.rect = new Rectangle((int)mitem.labelLoc.X, (int)mitem.labelLoc.Y, (int)mfont.MeasureString(mitem.labelText).X, (int)mfont.MeasureString(mitem.labelText).Y);
+                    mitem.labelLoc = new Vector2((int)(x - (mFont.MeasureString(mitem.labelText).X / 2)), (int)(yoff + y - (mFont.MeasureString(mitem.labelText).Y / 2)));
+                    mitem.rect = new Rectangle((int)mitem.labelLoc.X, (int)mitem.labelLoc.Y, (int)mFont.MeasureString(mitem.labelText).X, (int)mFont.MeasureString(mitem.labelText).Y);
                     rect.Inflate(5, 5);
                     yoff += 50;
                 }
             }
 
-            public void DrawMenu(SpriteBatch screen, SpriteFont mfont)
+            public void ClearHighlight()
             {
+                if (status == mItemStatus.Highlight) status = mItemStatus.Enabled;
+                foreach (MenuItem mitem in children)
+                {
+                    mitem.ClearHighlight();
+                }
+            }
 
+            public void MenuHover(int mx, int my)
+            {
+                ClearHighlight();
+                Point mloc = new Point(mx, my);
+                foreach (MenuItem mitem in children)
+                {
+                    if (mitem.rect.Contains(mloc))
+                    {
+                        if (mitem.status == mItemStatus.Enabled)
+                        {
+                            mitem.status = mItemStatus.Highlight;
+                        }
+                    }
+                }
+            }
+
+            public void MenuClick(int mx, int my)
+            {
+                Point mloc = new Point(mx, my);
+                foreach (MenuItem mitem in children)
+                {
+                    if (mitem.rect.Contains(mloc))
+                    {
+                        mitem.command(mitem.labelText);
+                    }
+                }
+            }
+
+            public void DrawMenu(SpriteBatch screen, Color hlCol)
+            {
+                foreach (MenuItem mitem in children)
+                {
+                    if (mitem.status == mItemStatus.Highlight)
+                    {
+                        screen.DrawString(mFont, mitem.labelText, mitem.labelLoc, hlCol);
+                    }
+                    else if (mitem.status == mItemStatus.Enabled)
+                    {
+                        screen.DrawString(mFont, mitem.labelText, mitem.labelLoc, Color.White);
+                    }
+                    else if (mitem.status == mItemStatus.Disabled)
+                    {
+                        screen.DrawString(mFont, mitem.labelText, mitem.labelLoc, Color.Gray);
+                    }
+                }
             }
         }
 
@@ -182,11 +246,11 @@ namespace SpriteStrife
         public int selAct;
         public Texture2D statBar;
         public MenuItem mainMenu;
-        public List<MenuItem> gyMenu;
         public List<DeathCertificate> graves;
         public Texture2D graveTex;
         public List<Texture2D> overlays;
         public Point statsLoc;
+        public MenuItem curMenu;
 
         public GUI(GraphicsDevice gd, ContentManager cm, Color bgc, Color bdc)
         {
@@ -236,32 +300,10 @@ namespace SpriteStrife
             boxes.Add(new Box(gD, -10, -10, 510, 60, bgCol, bdCol, frameBorders)); //action bar
 
             mainMenu = new MenuItem("Main", menuFont);
-            //mainMenu.Add(new MenuItem("New Game", gD.Viewport.Width / 2, 150, menuFont));
-            //mainMenu.Add(new MenuItem("Continue", gD.Viewport.Width / 2, 200, menuFont));
-            //mainMenu.Add(new MenuItem("Tutorial", gD.Viewport.Width / 2, 250, menuFont));
-            //mainMenu.Add(new MenuItem("Options", gD.Viewport.Width / 2, 300, menuFont));
-            //mainMenu.Add(new MenuItem("Graveyard", gD.Viewport.Width / 2, 350, menuFont));
-            //mainMenu.Add(new MenuItem("Exit", gD.Viewport.Width / 2, 400, menuFont));
-            mainMenu.children.Add(new MenuItem("New Game", menuFont));
-            mainMenu.children.Add(new MenuItem("Continue", menuFont));
-            mainMenu.children.Add(new MenuItem("Tutorial", menuFont));
-            mainMenu.children.Add(new MenuItem("Options", menuFont));
-            mainMenu.children.Add(new MenuItem("Graveyard", menuFont));
-            mainMenu.children.Add(new MenuItem("Exit", menuFont));
-            mainMenu.children[2].enabled = false;
-            mainMenu.children[3].enabled = false;
-            if (!System.IO.Directory.Exists("testchar")) mainMenu.children[1].enabled = false;
-            mainMenu.children[1].children.Add(new MenuItem("Some", menuFont));
-            mainMenu.children[1].children.Add(new MenuItem("Child", menuFont));
-            mainMenu.children[1].children.Add(new MenuItem("Menus", menuFont));
-            mainMenu.children[1].children[2].children.Add(new MenuItem("Even", menuFont));
-            mainMenu.children[1].children[2].children.Add(new MenuItem("More", menuFont));
-
-            mainMenu.OpenMenu(gD.Viewport.Width / 2, 100, menuFont);
+            
+            curMenu = mainMenu;
 
             graveTex = cm.Load<Texture2D>("gravestones");
-            gyMenu = new List<MenuItem>();
-            gyMenu.Add(new MenuItem("< Back", menuFont, 150, 80));
 
             //graves = new List<DeathCertificate>();
             //Random grand = new Random();
@@ -403,21 +445,7 @@ namespace SpriteStrife
             }
             else if (gameState == GameState.MainMenu)
             {
-                foreach (MenuItem mitem in mainMenu.children)
-                {
-                    if (mitem.enabled && mitem.highlight)
-                    {
-                        screen.DrawString(menuFont, mitem.labelText, mitem.labelLoc, hlCol);
-                    }
-                    else if (mitem.enabled)
-                    {
-                        screen.DrawString(menuFont, mitem.labelText, mitem.labelLoc, Color.White);
-                    }
-                    else
-                    {
-                        screen.DrawString(menuFont, mitem.labelText, mitem.labelLoc, Color.Gray);
-                    }
-                }
+                curMenu.DrawMenu(screen, hlCol);
             }
             else if (gameState == GameState.Graveyard)
             {
@@ -428,23 +456,12 @@ namespace SpriteStrife
                     Color drawcol = new Color(220 - (40 * row), 220 - (40 * row), 220 - (40 * row));
                     screen.Draw(graveTex, new Rectangle(20 + (200 - (30 * row)) * col + (60 * row), (1500 / (10 + row ^ 2)), 180 - 50 * row, 360 - 100 * row), new Rectangle(10 * (graves[i].level / 4), 0, 10, 20), drawcol);
                 }
-
-                foreach (MenuItem mitem in gyMenu)
-                {
-                    if (mitem.enabled && mitem.highlight)
-                    {
-                        screen.DrawString(menuFont, mitem.labelText, mitem.labelLoc, hlCol);
-                    }
-                    else if (mitem.enabled)
-                    {
-                        screen.DrawString(menuFont, mitem.labelText, mitem.labelLoc, Color.White);
-                    }
-                    else
-                    {
-                        screen.DrawString(menuFont, mitem.labelText, mitem.labelLoc, Color.Gray);
-                    }
-                }
             }
+        }
+
+        public void ShowMenu(MenuItem menu)
+        {
+            curMenu = menu;
         }
 
         public void LogEntry(string linetext, Color linecolor)
@@ -512,10 +529,15 @@ namespace SpriteStrife
             return caught;
         }
 
-        public GameState ProcessInput(GameLogic gamelogic, GameState gameState, KeyboardState oKS, KeyboardState nKS, MouseState oMS, MouseState nMS, Hero hero, Map dMap)
+        public void ProcessInput(GameLogic gamelogic, GameState gameState, KeyboardState oKS, KeyboardState nKS, MouseState oMS, MouseState nMS, Hero hero, Map dMap)
         {
             if (gameState == GameState.Running)
             {
+                if (nKS.IsKeyDown(Keys.Escape) && !oKS.IsKeyDown(Keys.Escape))
+                {
+                    gamelogic.OpenMainMenu("blank");
+                }
+
                 //adjust log
                 if (nKS.IsKeyDown(Keys.OemMinus) && oKS.IsKeyUp(Keys.OemMinus)) LogScrollUp();
                 else if (nKS.IsKeyDown(Keys.OemPlus) && oKS.IsKeyUp(Keys.OemPlus)) LogScrollDown();
@@ -582,70 +604,57 @@ namespace SpriteStrife
             }
             else if (gameState == GameState.MainMenu)
             {
-                foreach (MenuItem mitem in mainMenu.children)
+                mainMenu.MenuHover(nMS.X, nMS.Y);
+                if (nMS.LeftButton == ButtonState.Pressed && oMS.LeftButton == ButtonState.Released)
                 {
-                    mitem.highlight = false;
+                    mainMenu.MenuClick(nMS.X, nMS.Y);
                 }
-                foreach (MenuItem mitem in mainMenu.children)
-                {
-                    if (mitem.rect.Contains(new Point(nMS.X, nMS.Y)))
-                    {
-                        if (nMS.LeftButton == ButtonState.Pressed && oMS.LeftButton == ButtonState.Released)
-                        {
-                            if (mainMenu.children.IndexOf(mitem) == 0)
-                            {
-                                gamelogic.NewGame("testchar", 0);
-                                return GameState.Running;
-                            }
-                            else if (mainMenu.children.IndexOf(mitem) == 1)
-                            {
-                                gamelogic.ContinueGame("testchar");
-                                return GameState.Running;
-                            }
-                            else if (mainMenu.children.IndexOf(mitem) == 4)
-                            {
-                                return GameState.Graveyard;
-                            }
-                            else if (mainMenu.children.IndexOf(mitem) == 5)
-                            {
-                                gamelogic.Exit();
-                            }
-                        }
-                        else if (mitem.highlight == false && mitem.enabled)
-                        {
-                            mitem.highlight = true;
-                        }
-                    }
-                    
-                }
+
             }
             else if (gameState == GameState.Graveyard)
             {
-                foreach (MenuItem mitem in gyMenu)
+                if (nKS.IsKeyDown(Keys.Escape) && !oKS.IsKeyDown(Keys.Escape))
                 {
-                    mitem.highlight = false;
-                }
-                foreach (MenuItem mitem in gyMenu)
-                {
-                    if (mitem.rect.Contains(new Point(nMS.X, nMS.Y)))
-                    {
-                        if (nMS.LeftButton == ButtonState.Pressed && oMS.LeftButton == ButtonState.Released)
-                        {
-                            if (gyMenu.IndexOf(mitem) == 0)
-                            {
-                                return GameState.MainMenu;
-                            }
-                        }
-                        else if (mitem.highlight == false && mitem.enabled)
-                        {
-                            mitem.highlight = true;
-                        }
-                    }
+                    gamelogic.OpenMainMenu("blank");
                 }
             }
-
-            return gameState;
         }
+
+        //public GameState DoMenuCommand(MenuItem mitem, GameState gameState, GameLogic game, Hero hero, Map dmap)
+        //{
+        //    if (mcmd == mCommand.Open)
+        //    {
+        //        if (mitem.children.Count > 0)
+        //        {
+        //            //open menu
+        //        }
+        //    }
+        //    else if (mcmd == mCommand.Back)
+        //    {
+        //        //close menu
+        //    }
+        //    else if (mcmd == mCommand.NewGame)
+        //    {
+        //        game.NewGame("testchar", 0);
+        //    }
+        //    else if (mcmd == mCommand.LoadGame)
+        //    {
+        //        game.ContinueGame("testchar");
+        //    }
+        //    else if (mcmd == mCommand.Graveyard)
+        //    {
+        //        return GameState.Graveyard;
+        //    }
+        //    else if (mcmd == mCommand.Exit)
+        //    {
+        //        game.Exit();
+        //    }
+        //    else if (mcmd == mCommand.MainMenu)
+        //    {
+        //        return GameState.MainMenu;
+        //    }
+        //    return gameState;
+        //}
 
         public void SaveGraves()
         {
