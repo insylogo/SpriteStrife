@@ -123,6 +123,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HeroClass.cs" />
+    <Compile Include="Power.cs" />
     <Compile Include="DBLoader.cs" />
     <Compile Include="GUI.cs" />
     <Compile Include="Item.cs" />
@@ -135,6 +137,7 @@
     <Compile Include="GameLogic.cs" />
     <Compile Include="Stat.cs" />
     <Compile Include="StatSystem.cs" />
+    <Compile Include="TargetPattern.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
