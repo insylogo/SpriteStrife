@@ -483,3 +483,9 @@ C:\Users\Cheswick\gitprojects\SpriteStrife\SpriteStrife\SpriteStrife\bin\x86\Deb
 C:\Users\Cheswick\gitprojects\SpriteStrife\SpriteStrife\SpriteStrife\bin\x86\Debug\SpriteStrife.application
 C:\Users\Cheswick\gitprojects\SpriteStrife\SpriteStrife\SpriteStrife\obj\x86\Debug\SpriteStrife.exe.manifest
 C:\Users\Cheswick\gitprojects\SpriteStrife\SpriteStrife\SpriteStrife\obj\x86\Debug\SpriteStrife.application
+C:\Users\Rob\Desktop\SpriteStrife\SpriteStrife\SpriteStrife\bin\x86\Debug\Content\gui_globe.xnb
+C:\Users\Rob\Desktop\SpriteStrife\SpriteStrife\SpriteStrife\bin\x86\Debug\Content\font_atari18s.xnb
+C:\Users\Rob\Desktop\SpriteStrife\SpriteStrife\SpriteStrife\bin\x86\Debug\SpriteStrife.exe.manifest
+C:\Users\Rob\Desktop\SpriteStrife\SpriteStrife\SpriteStrife\bin\x86\Debug\SpriteStrife.application
+C:\Users\Rob\Desktop\SpriteStrife\SpriteStrife\SpriteStrife\obj\x86\Debug\SpriteStrife.exe.manifest
+C:\Users\Rob\Desktop\SpriteStrife\SpriteStrife\SpriteStrife\obj\x86\Debug\SpriteStrife.application

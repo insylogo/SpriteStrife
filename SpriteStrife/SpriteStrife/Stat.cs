@@ -16,33 +16,33 @@ namespace SpriteStrife
     class Stat
     {
 
-        public Stat(StatType type, int startingValue)
+        public Stat(StatType type, double startingValue = 0.0, double mod = 0.0, double dep = 0.0)
         {
             this.Type = type;
-            modifier = 0;
-            depletion = 0;
+            modifier = mod;
+            depletion = dep;
             basevalue = startingValue;
         }
 
-        private int modifier;
-        private int basevalue;
-        private int depletion;
+        private double modifier;
+        private double basevalue;
+        private double depletion;
         
         public StatType Type { get; set; }
 
-        public int MaxValue { 
+        public double MaxValue { 
             get {
-                return basevalue + modifier;
+                return (basevalue + modifier);
             }
         }
         public int Value
         {
             get
             {
-                return basevalue + modifier - depletion;
+                return (int) (basevalue + modifier - depletion);
             }
         }
-        public int Modifier {
+        public double Modifier {
             get
             {
                 return modifier;
@@ -52,7 +52,7 @@ namespace SpriteStrife
                 modifier = value;
             }
         }
-        public int BaseValue { 
+        public double BaseValue { 
             get
             {
                 return basevalue;   
@@ -63,13 +63,13 @@ namespace SpriteStrife
             }
         }
 
-        public void Drain(int drainAmt)
+        public void Drain(double drainAmt)
         {
             depletion += drainAmt;
             if (depletion > MaxValue) depletion = MaxValue;
         }
 
-        public void Restore(int restoAmt)
+        public void Restore(double restoAmt)
         {
             depletion -= restoAmt;
             if (depletion < 0) depletion = 0;

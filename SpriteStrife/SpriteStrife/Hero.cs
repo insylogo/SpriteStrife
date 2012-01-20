@@ -15,6 +15,11 @@ using Microsoft.Xna.Framework.Media;
 
 namespace SpriteStrife
 {
+    enum HeroClasses
+    {
+        Warrior = 0, Wizard, Priest
+    }
+
     [Serializable]
     class Hero
     {
@@ -25,6 +30,7 @@ namespace SpriteStrife
         public List<Point> mQueue;
         public float delay;
         public StatSystem stats;
+        public HeroClass chosenClass;
 
         public Hero(string hname, int htype)
         {
@@ -39,6 +45,63 @@ namespace SpriteStrife
             stats.SetBaseStat(StatType.Vitality, 13);
             stats.SetBaseStat(StatType.Sanity, 8);
             stats.DrainStat(StatType.Health, 9);
+
+            if ((HeroClasses)type == HeroClasses.Warrior)
+            {
+                chosenClass = new HeroClass("Warrior",
+                                            new StatSystem(
+                                                strength: 10,
+                                                toughness: 5,
+                                                health: 30,
+                                                intellect: 3,
+                                                perception: 5,
+                                                sanity: 15,
+                                                faith: 3,
+                                                wisdom: 2,
+                                                vitality: 20),
+                                            new StatSystem(
+                                                strength: 3,
+                                                toughness: 2,
+                                                health: 30,
+                                                intellect: 3,
+                                                perception: 5,
+                                                sanity: 15,
+                                                faith: 3,
+                                                wisdom: 2,
+                                                vitality: 20));
+                chosenClass.AddPower(new Power(
+                                                 name: "Rage", 
+                                                 aoePattern: new TargetPattern(), 
+                                                 cd: 30, 
+                                                 passive: true,
+                                                 statEffect:
+                                                            new StatSystem(
+                                                            strength: 10,
+                                                            toughness: 10,
+                                                            health: 10,
+                                                            intellect: -3,
+                                                            perception: -1,
+                                                            sanity: 0,
+                                                            faith: 0,
+                                                            wisdom: -2,
+                                                            vitality: 0),
+                                                  statCost: 
+                                                            new StatSystem(
+                                                            strength: 0,
+                                                            toughness: 0,
+                                                            health: 0,
+                                                            intellect: 0,
+                                                            perception: 0,
+                                                            sanity: 5,
+                                                            faith: 0,
+                                                            wisdom: 0,
+                                                            vitality: 5),
+                                                   dur: 5,
+                                                   firingRange: 0), 
+                                       levelReq: 0);
+                                      
+
+            }
         }
 
         public void Move(int newX, int newY, Map dMap, bool clearQueue = true)
