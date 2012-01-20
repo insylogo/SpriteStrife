@@ -5,6 +5,7 @@ using System.Text;
 
 namespace SpriteStrife
 {
+    [Serializable]
     public class Power
     {
         public bool IsPassive { get; set; }

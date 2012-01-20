@@ -5,6 +5,7 @@ using System.Text;
 
 namespace SpriteStrife
 {
+    [Serializable]
     class HeroClass
     {
 
@@ -29,7 +30,16 @@ namespace SpriteStrife
 
         public Power[] AvailablePowers
         {
-            
+            get
+            {
+                Power[] pows = new Power[unlockedPowers];
+                for (int i = 0; i < unlockedPowers; ++i)
+                {
+                    pows[i] = powers[unlockedPowers];
+                }
+                return pows;
+            }
+
         }
 
         public void AddPower(Power newPower, int levelReq = 0)
@@ -39,11 +49,22 @@ namespace SpriteStrife
                 Power[] swap = new Power[(int)(powers.Length * 1.5)];
                 for (int i = 0; i < count; ++i) {
                     swap[i] = powers[i];
+
                 }
                 powers = swap;
-            }
-            powers[count++] = newPower;
 
+                int[] reqswap = new int[(int)(powers.Length * 1.5)];
+                for (int i = 0; i < count; ++i)
+                {
+                    reqswap[i] = levelRequirements[i];
+
+                }
+                
+            }
+            levelRequirements[count] = levelReq;
+            powers[count] = newPower;
+
+            ++count;
         }
 
 

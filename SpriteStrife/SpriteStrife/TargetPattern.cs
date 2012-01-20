@@ -6,7 +6,8 @@ using Microsoft.Xna.Framework;
 
 namespace SpriteStrife
 {
-    struct TargetPattern
+    [Serializable]
+    public class TargetPattern
     {
         public bool[,] Pattern;
         public Point Center;

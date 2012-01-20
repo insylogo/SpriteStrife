@@ -6,14 +6,14 @@ using System.Text;
 namespace SpriteStrife
 {
 
-    enum StatType { 
+    public enum StatType { 
         Strength = 0, Toughness, Health,
         Intellect, Perception, Sanity,
         Faith, Wisdom, Vitality
     }
 
     [Serializable]
-    class Stat
+    public class Stat
     {
 
         public Stat(StatType type, double startingValue = 0.0, double mod = 0.0, double dep = 0.0)

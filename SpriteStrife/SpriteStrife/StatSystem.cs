@@ -6,9 +6,9 @@ using System.Text;
 namespace SpriteStrife
 {
     [Serializable]
-    class StatSystem
+    public class StatSystem
     {
-        Stat[] stats;
+        public Stat[] stats;
 
         public StatSystem()
         {
