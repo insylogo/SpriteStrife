@@ -505,7 +505,7 @@ namespace SpriteStrife
         {
 
             //initialize map array
-            Map newMap = new Map(xSize, ySize);
+            Map newMap = new Map(xSize, ySize, 40, 40);
             //newMap.floor = new FloorTypes[xSize, ySize];
             //newMap.alts = new int[xSize, ySize];
             for (int y = 0; y < ySize; y++)

@@ -313,9 +313,11 @@ namespace SpriteStrife
         public List<Texture2D> overlays;
         public Point statsLoc;
         public MenuItem curMenu;
+        public Random rando;
 
         public GUI(GraphicsDevice gd, ContentManager cm, Color bgc, Color bdc)
         {
+            rando = new Random();
             frameBorders = cm.Load<Texture2D>("gui_frameborders2");
             gD = gd;
             scrSizeX = gD.Viewport.Width;
@@ -655,7 +657,11 @@ namespace SpriteStrife
                             {
                                 foreach (Monster fiend in dMap.monsters)
                                 {
-                                    if (fiend.mapX == mapMLoc.X && fiend.mapY == mapMLoc.Y) fiend.Kill(dMap);
+                                    if (fiend.mapX == mapMLoc.X && fiend.mapY == mapMLoc.Y)
+                                    {
+                                        dMap.alts[fiend.mapX, fiend.mapY] = 17 + rando.Next(3);
+                                        fiend.Kill(dMap);
+                                    }
                                 }
                             }
                         }
