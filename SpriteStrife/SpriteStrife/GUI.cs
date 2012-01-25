@@ -339,10 +339,10 @@ namespace SpriteStrife
 
             itemcircle = cm.Load<Texture2D>("gui_itemcircle");
             actIcons = new List<Texture2D>();
-            actIcons.Add(cm.Load<Texture2D>("item\\item_1hwep_scimitar"));
+            actIcons.Add(cm.Load<Texture2D>("item\\1hwep_sword"));
             actIcons.Add(cm.Load<Texture2D>("power\\power_fireball"));
-            actIcons.Add(cm.Load<Texture2D>("item\\item_potion_red"));
-            actIcons.Add(cm.Load<Texture2D>("item\\item_potion_simplered"));
+            actIcons.Add(cm.Load<Texture2D>("item\\potion_red"));
+            actIcons.Add(cm.Load<Texture2D>("item\\potion_simplered"));
             selAct = 0;
 
             menuFont = cm.Load<SpriteFont>("font_atari24s");

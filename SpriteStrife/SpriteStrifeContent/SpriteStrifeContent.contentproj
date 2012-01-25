@@ -94,33 +94,33 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="item\item_1hwep_scimitar.png">
-      <Name>item_1hwep_scimitar</Name>
+    <Compile Include="item\1hwep_scimitar.png">
+      <Name>1hwep_scimitar</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="item\item_2hwep_staff.png">
-      <Name>item_2hwep_staff</Name>
+    <Compile Include="item\2hwep_staff.png">
+      <Name>2hwep_staff</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="item\item_chest_chain.png">
-      <Name>item_chest_chain</Name>
+    <Compile Include="item\chest_chain.png">
+      <Name>chest_chain</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="item\item_ring_ruby.png">
-      <Name>item_ring_ruby</Name>
+    <Compile Include="item\ring_ruby.png">
+      <Name>ring_ruby</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="item\item_treasure_chest.png">
-      <Name>item_treasure_chest</Name>
+    <Compile Include="item\treasure_chest.png">
+      <Name>treasure_chest</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="item\item_treasure_sack.png">
-      <Name>item_treasure_sack</Name>
+    <Compile Include="item\treasure_sack.png">
+      <Name>treasure_sack</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -136,23 +136,23 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="item\item_chest_cuirass.png">
-      <Name>item_chest_cuirass</Name>
+    <Compile Include="item\chest_cuirass.png">
+      <Name>chest_cuirass</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="item\item_chest_leather.png">
-      <Name>item_chest_leather</Name>
+    <Compile Include="item\chest_leather.png">
+      <Name>chest_leather</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="item\item_ring_emerald.png">
-      <Name>item_ring_emerald</Name>
+    <Compile Include="item\ring_emerald.png">
+      <Name>ring_emerald</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="item\item_ring_vines.png">
-      <Name>item_ring_vines</Name>
+    <Compile Include="item\ring_vines.png">
+      <Name>ring_vines</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -218,48 +218,48 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="item\item_1hwep_vampsword.png">
-      <Name>item_1hwep_vampsword</Name>
+    <Compile Include="item\1hwep_vampsword.png">
+      <Name>1hwep_vampsword</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="item\item_2hwep_axe.png">
-      <Name>item_2hwep_axe</Name>
+    <Compile Include="item\2hwep_axe.png">
+      <Name>2hwep_axe</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="item\item_2hwep_reaper.png">
-      <Name>item_2hwep_reaper</Name>
+    <Compile Include="item\2hwep_reaper.png">
+      <Name>2hwep_reaper</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="item\item_chest_reaper.png">
-      <Name>item_chest_reaper</Name>
+    <Compile Include="item\chest_reaper.png">
+      <Name>chest_reaper</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="item\item_head_mask.png">
-      <Name>item_head_mask</Name>
+    <Compile Include="item\head_mask.png">
+      <Name>head_mask</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="item\item_head_orc.png">
-      <Name>item_head_orc</Name>
+    <Compile Include="item\head_orc.png">
+      <Name>head_orc</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="item\item_head_reaper.png">
-      <Name>item_head_reaper</Name>
+    <Compile Include="item\head_reaper.png">
+      <Name>head_reaper</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="item\item_head_skull.png">
-      <Name>item_head_skull</Name>
+    <Compile Include="item\head_skull.png">
+      <Name>head_skull</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="item\item_head_wizard.png">
-      <Name>item_head_wizard</Name>
+    <Compile Include="item\head_wizard.png">
+      <Name>head_wizard</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -315,37 +315,32 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="item\item_1hwep_dagger.png">
-      <Name>item_1hwep_dagger</Name>
+    <Compile Include="item\1hwep_nailboard.png">
+      <Name>1hwep_nailboard</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="item\item_1hwep_nailboard.png">
-      <Name>item_1hwep_nailboard</Name>
+    <Compile Include="item\head_chaos.png">
+      <Name>head_chaos</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="item\item_head_chaos.png">
-      <Name>item_head_chaos</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="item\item_shield_buckler.png">
-      <Name>item_shield_buckler</Name>
+    <Compile Include="item\shield_buckler.png">
+      <Name>shield_buckler</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="item\item_potion_red.png">
-      <Name>item_potion_red</Name>
+    <Compile Include="item\potion_red.png">
+      <Name>potion_red</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="item\item_potion_simplered.png">
-      <Name>item_potion_simplered</Name>
+    <Compile Include="item\potion_simplered.png">
+      <Name>potion_simplered</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
@@ -426,6 +421,43 @@
   <ItemGroup>
     <Compile Include="gui_frameborders3.png">
       <Name>gui_frameborders3</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="item\1hwep_axe.png">
+      <Name>1hwep_axe</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="item\1hwep_club.png">
+      <Name>1hwep_club</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="item\1hwep_dagger.png">
+      <Name>1hwep_dagger</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="item\1hwep_hammer.png">
+      <Name>1hwep_hammer</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="item\1hwep_moltenaxe.png">
+      <Name>1hwep_moltenaxe</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="item\1hwep_sword.png">
+      <Name>1hwep_sword</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="item\shield_washboard.png">
+      <Name>shield_washboard</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

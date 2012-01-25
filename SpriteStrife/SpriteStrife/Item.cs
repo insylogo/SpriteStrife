@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Data;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -16,9 +17,9 @@ namespace SpriteStrife
     enum ItemType
     {
         None = 0, Hands, Feet,
-        Chest, Head, OneHandedMelee,
-        TwoHandedMelee, OneHandedRanged,
-        TwoHandedRanged, Shield, Potion,
+        Chest, Head, Neck, Ring, Charm,
+        OneHandedMelee, TwoHandedMelee, OneHandedRanged,
+        TwoHandedRanged, Ammunition, Shield, Potion,
         Food, Scroll, Gold
     }
 
@@ -144,6 +145,11 @@ namespace SpriteStrife
                 attributes = value;
             }
         }
+
+    }
+
+    class ItemGen
+    {
 
     }
 }
